@@ -1,0 +1,482 @@
+[
+  {
+    "id": "TC-001",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 1,
+    "difficulty": "easy",
+    "imageUrl": "/database/train/one/caibingbing_10139_D3_1_17.jpg",
+    "humanLabel": {
+      "grade": 1
+    },
+    "modelOutput": {
+      "grade": 1
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-002",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 1,
+    "difficulty": "easy",
+    "imageUrl": "/database/train/one/chenmin_11843_D3_1_2.jpg",
+    "humanLabel": {
+      "grade": 1
+    },
+    "modelOutput": {
+      "grade": 1
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-003",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 1,
+    "difficulty": "easy",
+    "imageUrl": "/database/train/one/chenxin_10644_D3_1_10.jpg",
+    "humanLabel": {
+      "grade": 1
+    },
+    "modelOutput": {
+      "grade": 1
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-004",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 1,
+    "difficulty": "easy",
+    "imageUrl": "/database/train/one/cuixiuhong_10255_D3_1_1.jpg",
+    "humanLabel": {
+      "grade": 1
+    },
+    "modelOutput": {
+      "grade": 1
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-005",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 1,
+    "difficulty": "easy",
+    "imageUrl": "/database/train/one/fuxiaodan_11978_D3_1_4.jpg",
+    "humanLabel": {
+      "grade": 1
+    },
+    "modelOutput": {
+      "grade": 1
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-006",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 2,
+    "difficulty": "medium",
+    "imageUrl": "/database/train/two/baiyanli_12513_D3_1_18.jpg",
+    "humanLabel": {
+      "grade": 2
+    },
+    "modelOutput": {
+      "grade": 2
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-007",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 2,
+    "difficulty": "medium",
+    "imageUrl": "/database/train/two/cengxin_10958_D3_1_1.jpg",
+    "humanLabel": {
+      "grade": 2
+    },
+    "modelOutput": {
+      "grade": 3
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-008",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 2,
+    "difficulty": "medium",
+    "imageUrl": "/database/train/two/chenwei_12785_D3_1_16.jpg",
+    "humanLabel": {
+      "grade": 2
+    },
+    "modelOutput": {
+      "grade": 2
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-009",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 2,
+    "difficulty": "medium",
+    "imageUrl": "/database/train/two/chenyanfeng_12067_D3_1_9.jpg",
+    "humanLabel": {
+      "grade": 2
+    },
+    "modelOutput": {
+      "grade": 2
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-010",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 2,
+    "difficulty": "medium",
+    "imageUrl": "/database/train/two/duying_10184_D3_1_21.jpg",
+    "humanLabel": {
+      "grade": 2
+    },
+    "modelOutput": {
+      "grade": 2
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-011",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 3,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/three/caili_10866_D3_1_2.jpg",
+    "humanLabel": {
+      "grade": 3
+    },
+    "modelOutput": {
+      "grade": 3
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-012",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 3,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/three/chenchaohua_11651_D3_1_26.jpg",
+    "humanLabel": {
+      "grade": 3
+    },
+    "modelOutput": {
+      "grade": 2
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-013",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 3,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/three/chenweiwei_10110_D3_1_11.jpg",
+    "humanLabel": {
+      "grade": 3
+    },
+    "modelOutput": {
+      "grade": 3
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-014",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 3,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/three/gaohongli_10529_D3_1_11.jpg",
+    "humanLabel": {
+      "grade": 3
+    },
+    "modelOutput": {
+      "grade": 3
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-015",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 3,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/three/guokexun_10397_D3_1_6.jpg",
+    "humanLabel": {
+      "grade": 3
+    },
+    "modelOutput": {
+      "grade": 3
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-016",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 4,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/four/123zhaoxiang_10130_D3_1_7.jpg",
+    "humanLabel": {
+      "grade": 4
+    },
+    "modelOutput": {
+      "grade": 4
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-017",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 4,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/four/andidi_10067_D3_1_7.jpg",
+    "humanLabel": {
+      "grade": 4
+    },
+    "modelOutput": {
+      "grade": 4
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-018",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 4,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/four/andidi_11792_D3_1_7.jpg",
+    "humanLabel": {
+      "grade": 4
+    },
+    "modelOutput": {
+      "grade": 3
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-019",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 4,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/four/caoyanhong_10695_D3_1_5.jpg",
+    "humanLabel": {
+      "grade": 4
+    },
+    "modelOutput": {
+      "grade": 4
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  },
+  {
+    "id": "TC-020",
+    "is_training": true,
+    "is_anonymized": true,
+    "grade": 4,
+    "difficulty": "hard",
+    "imageUrl": "/database/train/four/changfeng_11543_D3_1_26.jpg",
+    "humanLabel": {
+      "grade": 4
+    },
+    "modelOutput": {
+      "grade": 4
+    },
+    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentFeedback": {
+      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
+      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
+    },
+    "evidenceSchemaVersion": 1,
+    "morphologyEvidence": [],
+    "dataSource": "demo",
+    "scoringEligible": false,
+    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+  }
+]

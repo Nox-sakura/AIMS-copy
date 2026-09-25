@@ -1,5 +1,5 @@
 /**
- * mcaApi.js — MCA 后端 API 调用封装
+ * mcaApi.js — 分级后端 API 调用封装
  *
  * 提供两个函数：
  *   predictEmbryo(file)     — 提交图像，返回评级结果
@@ -21,33 +21,15 @@ function _frontendSimulate(file) {
   ]
   const g = grades[seed]
 
-  // 前端 conceptScores（与 assessments.js 格式一致）
-  const scoreMap = {
-    0: [[92,18.50],[88,12.00],[90,16.50],[88,14.00],[86,10.50],[84,9.50],[83,8.00],[5,5.00],[2,3.50],[3,2.50]],
-    1: [[72,14.50],[76,11.00],[68,13.50],[70,12.00],[65,9.00],[63,8.50],[60,6.50],[24,14.50],[9,5.50],[14,5.00]],
-    2: [[48,9.50],[44,8.00],[42,8.50],[38,7.50],[35,6.50],[32,6.00],[28,5.00],[60,24.00],[42,14.50],[35,10.50]],
-    3: [[22,4.80],[18,3.50],[15,4.20],[12,3.80],[10,3.00],[8,3.20],[7,2.50],[84,34.50],[68,22.00],[60,18.50]],
-  }
-  const ids = ['C01','C02','C03','C04','C05','C06','C07','C08','C09','C10']
-  const frontend_concept_scores = ids.map((id, i) => ({
-    id,
-    score: scoreMap[seed][i][0],
-    percent: scoreMap[seed][i][1],
-  }))
-
-  const decisionMap = {
-    0: '该胚胎各项形态学指标均处于优秀水平，碎片化比例极低（<5%），细胞均一性和对称性突出，发育速率与标准时序高度吻合。综合评估为 Grade 1，具有高移植优先级，强烈建议优先移植。',
-    1: '胚胎整体质量良好，细胞均一性轻微不足，碎片化比例约 12%，在可接受范围内。发育速率略慢于标准时序，其余指标正常。综合评估为 Grade 2，可作为备选移植胚胎。',
-    2: '碎片化比例达 26%，细胞对称性较差，部分卵裂球大小差异明显。发育速率偏慢，综合评估为 Grade 3，移植潜力有限，建议在无更优选择时考虑使用。',
-    3: '碎片化比例超过 40%，细胞严重不均一，可见多核细胞及大型空泡。综合评估为 Grade 4，不建议用于移植，建议废弃。',
-  }
 
   return {
     ...g,
     grade_probabilities: { 'Grade 1': 0.05, 'Grade 2': 0.10, 'Grade 3': 0.10, 'Grade 4': 0.05, [g.grade_name]: g.confidence },
     concept_scores: {},
-    frontend_concept_scores,
-    ai_decision: decisionMap[seed],
+    frontend_concept_scores: [],
+    evidenceSchemaVersion: 1,
+    morphologyEvidence: [],
+    ai_decision: '演示分级结果，未产生形态测量；四项观察待复核。',
     inference_time_ms: 312.4,
     simulated: true,
   }
@@ -67,7 +49,7 @@ export async function checkBackendHealth() {
 }
 
 /**
- * 提交胚胎图像，获取 MCA 评级结果
+ * 提交胚胎图像，获取分级结果
  *
  * @param {File} file — 图像文件对象
  * @returns {Promise<PredictResponse>}

@@ -12,7 +12,7 @@ import hashlib
 import numpy as np
 from typing import Optional
 
-# ── 前端 concepts.js 中的 10 个概念 ID 与论文概念名的映射 ──
+# ── 旧版接口兼容映射；不得转换为形态测量或贡献解释 ──
 FRONTEND_CONCEPTS = [
     ("C01", "uniform cell size"),          # 对调后 C01 = 细胞大小均一性
     ("C02", "clear cytoplasm"),            # C02 = 细胞质清晰度

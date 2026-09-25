@@ -327,3 +327,7 @@ export const assessments = [
     ],
   },
 ]
+
+// 仅为文件名对应的示例记录关联图像，其他记录不得复用。
+const imageExample = assessments.find(a => a.id === 'ASS-2026-0029')
+if (imageExample) imageExample.image = { id: 'demo-baiyanli', source: 'demo', src: '/database/baiyanli_12515_D3_1_8.png', heatmap: { imageId: 'demo-baiyanli', src: '/database/baiyanli_12515_D3_1_8_heatmap.png' } }

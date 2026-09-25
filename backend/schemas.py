@@ -22,7 +22,7 @@ class PredictResponse(BaseModel):
     # 前端 conceptScores 格式（id + score + percent，直接填入 assessments.js）
     frontend_concept_scores: List[Dict]         # [{"id":"C01","score":92,"percent":18.50}, ...]
 
-    # AI 诊断文本（论文 Figure 6 格式）
+    # 旧版兼容文本字段；形态观察展示不使用该字段
     ai_decision: str
 
     # 处理耗时（毫秒）
