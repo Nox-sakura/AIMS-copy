@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-medical-bg text-medical-text font-sans text-base antialiased;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* 统一滚动条样式 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F5F7FA;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #DDE3EC;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1A6EBD;
+  }
+}
+
+@layer components {
+  /* 通用按钮 */
+  .btn-primary {
+    @apply bg-medical-blue text-white px-4 py-2 rounded-md text-sm font-medium
+           hover:bg-medical-blue-dark transition-colors duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-white text-medical-blue border border-medical-blue px-4 py-2 rounded-md
+           text-sm font-medium hover:bg-medical-blue-light transition-colors duration-150;
+  }
+  .btn-danger {
+    @apply bg-medical-red text-white px-4 py-2 rounded-md text-sm font-medium
+           hover:opacity-90 transition-colors duration-150;
+  }
+  .btn-ghost {
+    @apply text-medical-muted px-4 py-2 rounded-md text-sm font-medium
+           hover:bg-gray-100 transition-colors duration-150;
+  }
+
+  /* 通用输入框 */
+  .input-field {
+    @apply w-full border border-medical-border rounded-md px-3 py-2 text-sm
+           focus:outline-none focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20
+           transition-colors placeholder-medical-muted bg-white;
+  }
+
+  /* 卡片容器 */
+  .card {
+    @apply bg-white rounded-lg border border-medical-border shadow-sm;
+  }
+}
