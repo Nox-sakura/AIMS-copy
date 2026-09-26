@@ -65,7 +65,8 @@ export async function tool_get_report_detail(reportId, currentUser) {
   return { ...assessment, conceptScores: enrichedScores }
 }
 
-const CHAT_SYSTEM_PROMPT = `你是一名辅助 IVF 胚胎学家的临床智能助手。你可以回答关于 IVF、胚胎学、辅助生殖技术的问题，也可以协助查询患者信息和评估报告（用户可通过指令触发）。回答简洁专业，不做最终诊断建议。`
+const CHAT_SYSTEM_PROMPT = `你是一名辅助 IVF 胚胎学家的临床智能助手。回答简洁专业，不做最终诊断或移植建议。
+讨论 Day 3 胚胎形态分级时，参考碎片率 <10%、10–25%、25–50%、>50% 的四档范围，并结合卵裂球均一性等可见形态；不要仅凭碎片率定级。单张静态图像不能判断分裂速度、代谢状态或妊娠结局。患者与报告查询由页面中的本地查询功能完成，不要声称你已访问未提供的数据。`
 
 /**
  * 通用对话：将用户消息发送给 LLM，返回自然语言回复
@@ -124,30 +125,30 @@ export async function tool_compare_embryos(patientId, cycleNo, currentUser) {
 
 const SUMMARY_SYSTEM_PROMPT = `你是一名辅助 IVF 胚胎学家的 AI 助手，只生成评估总结草稿，不做最终诊断。
 
-分级标准（第3天卵裂期胚胎）：
-- Grade 1：卵裂球均一，碎片化 <5%
-- Grade 2：碎片化 5–20%
-- Grade 3：碎片化 20–50%
-- Grade 4：碎片化 >50% 或多核
+分级参考（第 3 天卵裂期胚胎）：
+- Grade 1：碎片率 <10%，卵裂球较均一
+- Grade 2：碎片率 10–25%，可有轻度不均一
+- Grade 3：碎片率 25–50%，形态不均一更明显
+- Grade 4：碎片率 >50%，严重形态异常；多核须有明确观察依据
+分级应综合可见形态，以上区间不是单独的诊断规则。
 
-概念名称使用以下界面标签，禁止自行创造：
-symmetrical blastomeres, clear cytoplasm, uniform cell size, intact zona pellucida, rapid cleavage rate, minimal metabolic debris, smooth membrane boundaries, minor fragmentation, pronounced vacuolation, disorganized cell structures
+沿用输入中的既有等级；概念分数是界面参考值，不能当作对本图像的独立实测。没有明确碎片率观测时，不得编造具体百分比。单张静态图像不能确认分裂速度、代谢状态、移植潜力或妊娠结局，也不要据此给出移植建议。
 
 输出格式：自然语言段落，150 字以内，以"本胚胎评估结果为 Grade X，……"开头。
 末尾必须附加："【草稿仅供参考，最终结论须由主治医师确认。】"`
 
 /**
- * 调用 Anthropic API 生成评估总结草稿
+ * 调用豆包 API 生成评估总结草稿
  */
 export async function tool_generate_summary(reportDetail, currentUser) {
   const conceptList = reportDetail.conceptScores
+    .filter(cs => ['C01', 'C02', 'C03', 'C04', 'C08'].includes(cs.id))
     .map(cs => `${cs.nameEn}（${cs.nameCn}）: ${cs.score}`)
     .join('，')
 
   const userPrompt = `胚胎编号：${reportDetail.embryoNo}
-患者ID：${reportDetail.patientId}
 AI评级：${reportDetail.grade}（${reportDetail.gradeLabel}）
-各概念得分：${conceptList}
+形态概念参考分数：${conceptList}
 
 请根据以上信息生成评估总结草稿。`
 

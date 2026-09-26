@@ -6,52 +6,43 @@ import { useAppContext } from '@/context/AppContext'
 import { logEducationAction, EDUCATION_ACTIONS } from '@/utils/educationLogger'
 
 /* ── System Prompt ── */
-const SYSTEM_PROMPT = `你是 胚胎评估教学助手。你的知识边界严格限定为：
-1. Day 3 卵裂期胚胎形态学评估
-2. Grade 1–4 分级标准（教学分级参考）
-3. 以下概念名称（当前训练标签，不得使用其他概念）：
-   Grade 1：symmetrical blastomeres, uniform cell size, clear cytoplasm, no fragmentation,
-   rapid cleavage rate, intact zona pellucida, well-defined intercellular borders,
-   compact blastomere alignment, minimal metabolic debris, smooth membrane boundaries,
-   homogeneous texture, balanced cell division, no nuclear fragments
-   Grade 2：uneven blastomere size, delayed cleavage stage, suboptimal cell alignment,
-   slow division rate, slight membrane roughness, slight metabolic residue,
-   mild structural irregularities, irregular cytoplasm granularity
-   Grade 3：pronounced vacuolation, stalled cleavage phase, disorganized cell structures,
-   fragmented membranes, uneven cytoplasmic coloration, mild cell border retraction,
-   localized cell swelling, uneven intracellular granularity
-   Grade 4：indistinct cell boundaries, loss of membrane integrity, vacuole swelling and rupture,
-   signs of apoptosis, overall structural disintegration, disordered cell arrangement,
-   granular cytoplasm accumulation, abnormal cell number, visible cell debris,
-   complete developmental arrest
-
-你绝对不得讨论：移植建议、临床决策、囊胚评估（Day 5）、其他胚胎类型、教学范围外的任何概念。
-当学员回答时，基于 Grade 特征给出有教学价值的反馈，鼓励深入思考。
-回复使用中文，专业术语保留英文原名（如 symmetrical blastomeres）。
-回复长度：100–200 字，不使用 Markdown 格式符号。`
+const SYSTEM_PROMPT = `你是 Day 3 卵裂期胚胎形态评估教学助手。仅根据给定的人工分级与学员回答反馈，不要声称自己看到了图像。
+教学分级参考：Grade 1 碎片率 <10%、卵裂球较均一；Grade 2 碎片率 10–25%、可有轻度不均一；Grade 3 碎片率 25–50%、形态不均一更明显；Grade 4 碎片率 >50%、严重形态异常。分级还需综合卵裂球均一性等形态特征，不能只凭单一阈值。
+没有明确观察值时，不要编造碎片率、细胞数或图像细节。单张静态图像无法判断分裂速度、发育停滞或代谢状态，也不能据此推断移植或妊娠结局。原题若提到这些内容，请说明证据边界，转而讨论可见形态。
+如果学员作出分级，先与人工分级核对，再简述理由。只讨论 Day 3 形态教学，不给临床处置建议；使用中文，100–200 字，不使用 Markdown。`
 
 /* ── API 调用 ── */
-async function callAnthropicAPI(messages) {
+async function callDoubaoAPI(messages, caseData) {
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
+  const timeoutId = setTimeout(() => controller.abort(), 15000)
 
   try {
-    const response = await fetch('/api/anthropic', {
+    const response = await fetch('/api/doubao', {
       method: 'POST',
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: messages.map(m => ({ role: m.role, content: m.content })),
+        model: 'doubao-seed-1-8-251228',
+        input: [
+          {
+            role: 'system',
+            content: [{ type: 'input_text', text: `${SYSTEM_PROMPT}\n本案例人工标注：Grade ${caseData.humanLabel.grade}。` }],
+          },
+          ...messages.slice(-8).map(m => ({
+            role: m.role,
+            content: [{ type: 'input_text', text: m.content }],
+          })),
+        ],
       }),
     })
     if (!response.ok) throw new Error(`API error: ${response.status}`)
     const data = await response.json()
-    return data.content[0]?.text ?? ''
+    const reply = data.output?.find(item => item.type === 'message')?.content
+      ?.find(item => item.type === 'output_text')?.text?.trim()
+    if (!reply) throw new Error('API 返回空回复')
+    return reply
   } finally {
     clearTimeout(timeoutId)
   }
@@ -66,7 +57,14 @@ function getFallbackReply(userInput, caseData) {
     `${correctGrade}级`,
     ['一', '二', '三', '四'][correctGrade - 1] + '级',
   ].some(kw => inputLower.includes(kw))
-  return isCorrect ? caseData.agentFeedback.correct : caseData.agentFeedback.incorrect
+  const gradeReference = {
+    1: '碎片率通常低于 10%，卵裂球较均一',
+    2: '碎片率通常为 10–25%，可有轻度不均一',
+    3: '碎片率通常为 25–50%，形态不均一更明显',
+    4: '碎片率通常超过 50%，形态异常较重',
+  }
+  const lead = isCorrect ? '你的分级与本案例人工标注一致。' : '可对照本案例的人工标注继续核对。'
+  return `${lead}人工标注为 Grade ${correctGrade}；教学参考：${gradeReference[correctGrade]}。还需结合可见形态综合判断；单张图像不能确认分裂速度或发育结局。`
 }
 
 /* ── 时间格式 ── */
@@ -165,7 +163,7 @@ export default function AgentChatPanel({ caseData }) {
     })
 
     try {
-      const reply = await callAnthropicAPI([...messages, userMsg])
+      const reply = await callDoubaoAPI([...messages, userMsg], caseData)
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'assistant',
