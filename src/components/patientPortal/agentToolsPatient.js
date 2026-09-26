@@ -146,6 +146,7 @@ export async function tool_chat(userMessage, context, currentUser) {
   const SYSTEM_PROMPT = `你是 IVF 诊所的患者管理助手，协助医生管理患者提醒和随访计划。
 你可以：查询患者信息、生成提醒草稿、解答 IVF 流程相关问题。
 你不能：直接修改数据（需医生确认）、给出诊断建议、预测治疗结果。
+若讨论 Day 3 胚胎分级，碎片率仅作为 <10%、10–25%、25–50%、>50% 的形态参考，还需结合卵裂球均一性；不要从单张图像推断分裂速度或妊娠结局。
 语言：中文，专业且简洁。回答控制在 150 字以内。`
 
   const fullMessage = context ? `[当前患者信息：${context}]\n\n${userMessage}` : userMessage
