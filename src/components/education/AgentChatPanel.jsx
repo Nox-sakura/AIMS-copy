@@ -6,6 +6,8 @@ import { useAppContext } from '@/context/AppContext'
 import { logEducationAction, EDUCATION_ACTIONS } from '@/utils/educationLogger'
 import { getCasePresetReply } from './casePresetAnswers'
 
+const PRESET_REPLY_DELAY_MS = 2000
+
 /* ── System Prompt ── */
 const SYSTEM_PROMPT = `你是 Day 3 卵裂期胚胎形态评估教学助手。仅根据给定的人工分级与学员回答反馈，不要声称自己看到了图像。
 教学分级参考：Grade 1 碎片率 <10%、卵裂球较均一；Grade 2 碎片率 10–25%、可有轻度不均一；Grade 3 碎片率 25–50%、形态不均一更明显；Grade 4 碎片率 >50%、严重形态异常。分级还需综合卵裂球均一性等形态特征，不能只凭单一阈值。
@@ -112,6 +114,7 @@ export default function AgentChatPanel({ caseData }) {
   const [inputText, setInputText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const scrollRef = useRef(null)
+  const presetReplyTimerRef = useRef(null)
 
   // 案例切换时重置消息并插入初始问题
   useEffect(() => {
@@ -123,6 +126,12 @@ export default function AgentChatPanel({ caseData }) {
       timestamp: new Date(),
     }])
     setInputText('')
+    return () => {
+      if (presetReplyTimerRef.current !== null) {
+        clearTimeout(presetReplyTimerRef.current)
+        presetReplyTimerRef.current = null
+      }
+    }
   }, [caseData?.id])
 
   // 自动滚动到底部
@@ -145,13 +154,20 @@ export default function AgentChatPanel({ caseData }) {
     })
 
     if (!isFollowUp) {
-      setMessages(prev => [...prev, userMsg, {
-        id: userMsg.id + 1,
-        role: 'assistant',
-        content: getCasePresetReply(caseData, userMsg.content),
-        timestamp: new Date(),
-      }])
-      logEducationAction(currentUser?.id ?? 'unknown', EDUCATION_ACTIONS.VIEW_FEEDBACK, { caseId: caseData.id })
+      const reply = getCasePresetReply(caseData, userMsg.content)
+      setMessages(prev => [...prev, userMsg])
+      setIsLoading(true)
+      presetReplyTimerRef.current = setTimeout(() => {
+        presetReplyTimerRef.current = null
+        setMessages(prev => [...prev, {
+          id: userMsg.id + 1,
+          role: 'assistant',
+          content: reply,
+          timestamp: new Date(),
+        }])
+        setIsLoading(false)
+        logEducationAction(currentUser?.id ?? 'unknown', EDUCATION_ACTIONS.VIEW_FEEDBACK, { caseId: caseData.id })
+      }, PRESET_REPLY_DELAY_MS)
       return
     }
 
