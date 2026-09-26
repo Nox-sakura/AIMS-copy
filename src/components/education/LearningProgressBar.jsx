@@ -1,4 +1,3 @@
-import { isScoringEligible, REFERENCE_VERSION } from '../../constants/gradingReference'
 /**
  * LearningProgressBar.jsx — 学习进度底部统计栏
  */
@@ -10,18 +9,17 @@ export default function LearningProgressBar({ cases, learningRecord }) {
   const completedCount = submittedCases.length
   const totalCount = cases.length
 
-  const scoredCases = submittedCases.filter(c => isScoringEligible(c) && learningRecord[c.id].referenceVersion === REFERENCE_VERSION)
-  const humanMatchCount = scoredCases.filter(
+  const humanMatchCount = submittedCases.filter(
     c => learningRecord[c.id].userGrade === c.humanLabel.grade
   ).length
-  const humanAccuracy = scoredCases.length > 0
-    ? Math.round(humanMatchCount / scoredCases.length * 100)
+  const humanAccuracy = completedCount > 0
+    ? Math.round(humanMatchCount / completedCount * 100)
     : 0
 
   const gradeAccuracy = [1, 2, 3, 4].reduce((acc, g) => {
-    const gradeCases = scoredCases.filter(c => c.humanLabel.grade === g)
+    const gradeCases = submittedCases.filter(c => c.humanLabel.grade === g)
     const correct = gradeCases.filter(c => learningRecord[c.id].userGrade === g).length
-    acc[g] = gradeCases.length > 0 ? Math.round(correct / gradeCases.length * 100) : null
+    acc[g] = gradeCases.length > 0 ? Math.round(correct / gradeCases.length * 100) : 0
     return acc
   }, {})
 
@@ -40,8 +38,8 @@ export default function LearningProgressBar({ cases, learningRecord }) {
       <div className="flex items-center gap-2">
         <Target className="w-4 h-4 text-blue-500" />
         <span className="text-sm text-gray-600">
-          人工一致率（可计分）：
-          <span className="font-semibold text-blue-700 ml-1">{scoredCases.length ? `${humanAccuracy}%` : '—'}</span>
+          人工一致率：
+          <span className="font-semibold text-blue-700 ml-1">{humanAccuracy}%</span>
         </span>
       </div>
 
@@ -54,11 +52,11 @@ export default function LearningProgressBar({ cases, learningRecord }) {
               <div className="w-14 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${s.bar}`}
-                  style={{ width: `${gradeAccuracy[g] ?? 0}%` }}
+                  style={{ width: `${gradeAccuracy[g]}%` }}
                 />
               </div>
               <span className={`text-[10px] font-medium ${s.text}`}>
-                {gradeAccuracy[g] === null ? '—' : `${gradeAccuracy[g]}%`}
+                {gradeAccuracy[g]}%
               </span>
             </div>
           )

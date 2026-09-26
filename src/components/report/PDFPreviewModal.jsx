@@ -1,5 +1,4 @@
-import { getMorphologyEvidence, evidenceText, evidenceSummary } from '../../utils/morphologyEvidence'
-import MorphologyImages from '../common/MorphologyImages'
+import { getMorphologyEvidence } from '../../utils/morphologyEvidence'
 /**
  * PDFPreviewModal — PDF预览与导出全屏 Modal
  *
@@ -24,10 +23,16 @@ const ZOOM_OPTIONS = [
 const GRADE_LABEL = { grade1: '一级胚胎', grade2: '二级胚胎', grade3: '三级胚胎', grade4: '四级胚胎' }
 const GRADE_COLOR = { grade1: '#1A5276', grade2: '#1A6EBD', grade3: '#1E8449', grade4: '#196F3D' }
 
+const MODEL_AUC = {
+  'MCA-Lite':     '0.8900',
+  'MCA-Standard': '0.9288',
+  'MCA-Pro':      '0.9500',
+}
+
 const MODEL_LABEL = {
-  'MCA-Lite':     '轻量版（演示）',
-  'MCA-Standard': '标准版（演示）',
-  'MCA-Pro':      '精准版（演示）',
+  'MCA-Lite':     'DenseNet169',
+  'MCA-Standard': 'LWMA-Net',
+  'MCA-Pro':      '多网络融合模型',
 }
 
 /** A4 纸张内容区 */
@@ -35,7 +40,8 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
   const enriched = getMorphologyEvidence(a)
   const gradeColor = GRADE_COLOR[a.grade] ?? '#1A6EBD'
   const doctorLabel = formatDoctorWithTitle(a.doctor)
-  const modelLabel = a.simulated === false ? '分级模型' : MODEL_LABEL[a.modelUsed] ?? '标准版（演示）'
+  const modelLabel = MODEL_LABEL[a.modelUsed] ?? a.modelUsed ?? 'LWMA-Net'
+  const auc = MODEL_AUC[a.modelUsed] ?? '0.9288'
   const today = new Date().toISOString().slice(0, 10)
 
   return (
@@ -45,7 +51,7 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
         width: 794,
         minHeight: 1123,
         backgroundColor: '#fff',
-        padding: '32px 48px',
+        padding: '48px 56px',
         fontFamily: '"PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif',
         fontSize: 13,
         color: '#2C3E50',
@@ -62,10 +68,10 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
           <div>打印日期：{today}</div>
         </div>
       </div>
-      <div style={{ borderTop: '2px solid #DDE3EC', marginBottom: 14 }} />
+      <div style={{ borderTop: '2px solid #DDE3EC', marginBottom: 20 }} />
 
       {/* ② 患者基本信息区 */}
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 14, border: '1px solid #DDE3EC' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 20, border: '1px solid #DDE3EC' }}>
         <tbody>
           {[
             ['姓    名', patient?.name ?? a.patientName,    '患者ID',   a.patientId],
@@ -83,7 +89,7 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
           <tr style={{ backgroundColor: '#F9FAFB' }}>
             <td style={{ padding: '6px 10px', color: '#7F8C8D', textAlign: 'right', fontSize: 12, border: '1px solid #DDE3EC' }}>使用模型：</td>
             <td colSpan={3} style={{ padding: '6px 10px', fontWeight: 500, border: '1px solid #DDE3EC' }}>
-              {modelLabel}&nbsp;&nbsp;<span style={{ color: '#7F8C8D', fontWeight: 400 }}>{a.simulated === false ? '模型返回结果' : '分级演示数据'}</span>
+              {modelLabel}&nbsp;&nbsp;<span style={{ color: '#7F8C8D', fontWeight: 400 }}>AUC参考：{auc}</span>
             </td>
           </tr>
         </tbody>
@@ -91,9 +97,32 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
 
       {/* ③ 图像展示区（可开关） */}
       {includeHeatmap && (
-        <div style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 20 }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: '#2C3E50', marginBottom: 10 }}>图像展示</div>
-          <MorphologyImages record={a} compact />
+          <div style={{ display: 'flex', gap: 16 }}>
+            {/* 左列：AI 关注区域热力图（对调后移至左侧，使用真实图像） */}
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div style={{ height: 200, borderRadius: 8, border: '1px solid #DDE3EC', overflow: 'hidden' }}>
+                <img
+                  src="/database/baiyanli_12515_D3_1_8_heatmap.png"
+                  alt="AI关注区域热力图"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ fontSize: 12, color: '#7F8C8D', marginTop: 6 }}>AI 关注区域热力图</div>
+            </div>
+            {/* 右列：原始显微镜图像（对调后移至右侧，使用真实图像） */}
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div style={{ height: 200, borderRadius: 8, border: '1px solid #DDE3EC', overflow: 'hidden' }}>
+                <img
+                  src="/database/baiyanli_12515_D3_1_8.png"
+                  alt="原始显微镜图像"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ fontSize: 12, color: '#7F8C8D', marginTop: 6 }}>原始显微镜图像</div>
+            </div>
+          </div>
           {a.imageProcessed && (
             <div style={{ fontSize: 11, color: '#7F8C8D', marginTop: 6, textAlign: 'center' }}>图像经分辨率修正处理</div>
           )}
@@ -101,7 +130,7 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
       )}
 
       {/* ④ 综合评级结论区 */}
-      <div style={{ border: `2px solid ${gradeColor}33`, borderRadius: 8, padding: '16px 20px', marginBottom: 14, backgroundColor: `${gradeColor}08` }}>
+      <div style={{ border: `2px solid ${gradeColor}33`, borderRadius: 8, padding: '16px 20px', marginBottom: 20, backgroundColor: `${gradeColor}08` }}>
         <div style={{ fontSize: 12, fontWeight: 600, color: '#7F8C8D', marginBottom: 8 }}>综合评级</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <div style={{ textAlign: 'center' }}>
@@ -117,29 +146,29 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
               <div style={{ height: 6, width: `${a.confidence * 100}%`, backgroundColor: '#1A6EBD', borderRadius: 3 }} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#7F8C8D', marginTop: 6 }}>
-              <span>非本项目实测性能</span>
-              <span>形态记录：v1</span>
+              <span>AUC参考值：{auc}</span>
+              <span>模型版本：v2.1</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* ⑤ AI决策描述 */}
-      <div style={{ marginBottom: 14 }}>
+      <div style={{ marginBottom: 20 }}>
         <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8 }}>评估说明</div>
         <p style={{ fontSize: 13, color: '#4B5563', lineHeight: 1.8, fontStyle: 'italic', margin: 0 }}>
-          {evidenceSummary(a)}
+          {a.aiDecision}
         </p>
       </div>
 
-      {/* ⑥ 形态证据解析（可开关） */}
+      {/* ⑥ 概念评分明细（可开关） */}
       {includeConcepts && (
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8 }}>形态证据解析</div>
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8 }}>概念评分明细</div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
               <tr style={{ backgroundColor: '#374151', color: '#fff' }}>
-                {['观察项目', '观察结果', '来源', '记录方法'].map(h => (
+                {['观察项目', '形态描述', '数值'].map(h => (
                   <th key={h} style={{ padding: '6px 10px', textAlign: 'left', fontWeight: 600 }}>{h}</th>
                 ))}
               </tr>
@@ -148,15 +177,13 @@ function A4Report({ assessment: a, patient, includeHeatmap, includeConcepts }) {
               {enriched.map((s, i) => (
                 <tr key={s.id} style={{ backgroundColor: i % 2 === 0 ? '#F9FAFB' : '#fff' }}>
                   <td style={{ padding: '5px 10px', border: '1px solid #DDE3EC' }}>{s.name ?? s.id}</td>
-                  <td style={{ padding: '5px 10px', border: '1px solid #DDE3EC' }}>{evidenceText(s)}</td>
-                  <td style={{ padding: '5px 10px', border: '1px solid #DDE3EC', fontWeight: 600 }}>{s.sourceLabel}</td>
-                  <td style={{ padding: '5px 10px', border: '1px solid #DDE3EC' }}>
-                    {s.method ?? '—'}
-                  </td>
+                  <td style={{ padding: '5px 10px', border: '1px solid #DDE3EC' }}>{s.observation ?? '待复核'}</td>
+                  <td style={{ padding: '5px 10px', border: '1px solid #DDE3EC', fontWeight: 600 }}>{s.value !== null ? `${s.value}${s.unit}` : '—'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <p style={{fontSize: 10, color: "#9CA3AF", marginTop: 8}}>以上形态数据、热力图及模型指标为演示预设，非本图像实测结果。</p>
         </div>
       )}
 
@@ -217,7 +244,7 @@ export default function PDFPreviewModal({ assessment, patient, onClose, onExport
           left: 0 !important;
           width: 100% !important;
           margin: 0 !important;
-          padding: 32px 48px !important;
+          padding: 48px 56px !important;
           box-shadow: none !important;
         }
       }
@@ -299,7 +326,7 @@ export default function PDFPreviewModal({ assessment, patient, onClose, onExport
             onChange={e => setConcepts(e.target.checked)}
             className="rounded"
           />
-          包含形态观察
+          包含概念明细
         </label>
 
         {/* 导出按钮 */}

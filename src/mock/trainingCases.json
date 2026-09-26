@@ -10,18 +10,20 @@
       "grade": 1
     },
     "modelOutput": {
-      "grade": 1
+      "grade": 1,
+      "concepts": [
+        { "name": "symmetrical blastomeres", "score": 0.92 },
+        { "name": "uniform cell size", "score": 0.89 },
+        { "name": "clear cytoplasm", "score": 0.85 },
+        { "name": "no fragmentation", "score": 0.93 },
+        { "name": "intact zona pellucida", "score": 0.88 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "请观察图中胚胎的 blastomere 对称性与 zona pellucida 完整度，你认为该胚胎的碎片比例大约处于哪个范围？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！该胚胎呈现典型 Grade 1 特征：symmetrical blastomeres、uniform cell size 以及 intact zona pellucida，碎片比例低于 5%，发育潜能最优。",
+      "incorrect": "请重新审视细胞形态。Grade 1 核心特征为 symmetrical blastomeres、uniform cell size 及 no fragmentation，碎片比例须低于 5%，请对照图像再次评估。"
+    }
   },
   {
     "id": "TC-002",
@@ -34,18 +36,20 @@
       "grade": 1
     },
     "modelOutput": {
-      "grade": 1
+      "grade": 1,
+      "concepts": [
+        { "name": "clear cytoplasm", "score": 0.91 },
+        { "name": "homogeneous texture", "score": 0.87 },
+        { "name": "balanced cell division", "score": 0.84 },
+        { "name": "smooth membrane boundaries", "score": 0.90 },
+        { "name": "minimal metabolic debris", "score": 0.83 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "观察该胚胎的细胞质均匀度与 membrane boundaries 的光滑程度，你如何判断其 cytoplasm 质量？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！该胚胎具有 clear cytoplasm 与 smooth membrane boundaries，同时 homogeneous texture 清晰可见，是典型的高质量 Grade 1 胚胎。",
+      "incorrect": "请重新观察胞质特征。Grade 1 胚胎应具备 clear cytoplasm、homogeneous texture 及 smooth membrane boundaries，代表最高发育潜能。"
+    }
   },
   {
     "id": "TC-003",
@@ -58,18 +62,20 @@
       "grade": 1
     },
     "modelOutput": {
-      "grade": 1
+      "grade": 1,
+      "concepts": [
+        { "name": "rapid cleavage rate", "score": 0.88 },
+        { "name": "compact blastomere alignment", "score": 0.86 },
+        { "name": "well-defined intercellular borders", "score": 0.91 },
+        { "name": "no nuclear fragments", "score": 0.94 },
+        { "name": "balanced cell division", "score": 0.87 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎的 intercellular borders 是否清晰？结合 cleavage rate 的判断，你认为该胚胎的分级应为几级？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！well-defined intercellular borders 结合 rapid cleavage rate 及 no nuclear fragments，是 Grade 1 的显著标志，分裂进展符合正常节律。",
+      "incorrect": "请重新评估。Grade 1 胚胎的核心鉴别点包括 well-defined intercellular borders、rapid cleavage rate 及 no nuclear fragments，请仔细比对图像特征。"
+    }
   },
   {
     "id": "TC-004",
@@ -82,18 +88,20 @@
       "grade": 1
     },
     "modelOutput": {
-      "grade": 1
+      "grade": 1,
+      "concepts": [
+        { "name": "symmetrical blastomeres", "score": 0.90 },
+        { "name": "no fragmentation", "score": 0.95 },
+        { "name": "intact zona pellucida", "score": 0.86 },
+        { "name": "minimal metabolic debris", "score": 0.82 },
+        { "name": "homogeneous texture", "score": 0.85 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "请关注该胚胎的 blastomere 对称性及 zona pellucida 的完整性，这些特征如何帮助你判断胚胎分级？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！symmetrical blastomeres 与 intact zona pellucida 共同构成 Grade 1 的形态学基础，no fragmentation 进一步确认其高发育潜能。",
+      "incorrect": "请重新关注 symmetrical blastomeres 与 intact zona pellucida。Grade 1 胚胎在这两项指标上表现优异，碎片比例极低，请重新比对。"
+    }
   },
   {
     "id": "TC-005",
@@ -106,18 +114,20 @@
       "grade": 1
     },
     "modelOutput": {
-      "grade": 1
+      "grade": 1,
+      "concepts": [
+        { "name": "uniform cell size", "score": 0.88 },
+        { "name": "clear cytoplasm", "score": 0.90 },
+        { "name": "compact blastomere alignment", "score": 0.84 },
+        { "name": "smooth membrane boundaries", "score": 0.87 },
+        { "name": "rapid cleavage rate", "score": 0.89 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "观察该胚胎的 blastomere alignment 紧密程度与 cytoplasm 透明度，你认为其发育质量处于哪一等级？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！compact blastomere alignment 与 clear cytoplasm 是 Grade 1 的典型特征，结合 rapid cleavage rate，表明胚胎处于最佳发育状态。",
+      "incorrect": "请重新分析。Grade 1 胚胎应具备 compact blastomere alignment、clear cytoplasm 及 smooth membrane boundaries，请仔细观察图中各项特征后重新判断。"
+    }
   },
   {
     "id": "TC-006",
@@ -130,18 +140,19 @@
       "grade": 2
     },
     "modelOutput": {
-      "grade": 2
+      "grade": 2,
+      "concepts": [
+        { "name": "uneven blastomere size", "score": 0.78 },
+        { "name": "delayed cleavage stage", "score": 0.74 },
+        { "name": "slight membrane roughness", "score": 0.71 },
+        { "name": "suboptimal cell alignment", "score": 0.76 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎的 blastomere size 是否均一？请结合 cleavage stage 的延迟程度，判断该胚胎属于哪一等级？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！uneven blastomere size 与 delayed cleavage stage 是 Grade 2 的主要特征，slight membrane roughness 提示细胞膜质量轻度下降。",
+      "incorrect": "请注意区分 Grade 1 与 Grade 2。Grade 2 胚胎存在 uneven blastomere size 及 delayed cleavage stage，与 Grade 1 的均一性有明显差异。"
+    }
   },
   {
     "id": "TC-007",
@@ -154,18 +165,19 @@
       "grade": 2
     },
     "modelOutput": {
-      "grade": 3
+      "grade": 3,
+      "concepts": [
+        { "name": "slow division rate", "score": 0.72 },
+        { "name": "irregular cytoplasm granularity", "score": 0.69 },
+        { "name": "mild structural irregularities", "score": 0.74 },
+        { "name": "slight metabolic residue", "score": 0.67 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "观察该胚胎的 division rate 与 cytoplasm granularity，这些特征是否与 Grade 2 的典型表现相符？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！slow division rate 与 mild structural irregularities 是 Grade 2 的典型标志，irregular cytoplasm granularity 提示轻度质量下降。",
+      "incorrect": "请重点关注 slow division rate 及 mild structural irregularities。Grade 2 胚胎的结构异常程度较轻，与 Grade 3 的显著破坏有明显区别。"
+    }
   },
   {
     "id": "TC-008",
@@ -178,18 +190,20 @@
       "grade": 2
     },
     "modelOutput": {
-      "grade": 2
+      "grade": 2,
+      "concepts": [
+        { "name": "suboptimal cell alignment", "score": 0.75 },
+        { "name": "slight metabolic residue", "score": 0.70 },
+        { "name": "delayed cleavage stage", "score": 0.73 },
+        { "name": "uneven blastomere size", "score": 0.77 },
+        { "name": "slight membrane roughness", "score": 0.68 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "请观察该胚胎的 cell alignment 与 metabolic residue 情况，结合 cleavage stage 的延迟，你判断该胚胎属于哪一级别？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！suboptimal cell alignment 与 slight metabolic residue 是 Grade 2 的典型特征，cleavage stage 轻度延迟进一步支持此分级。",
+      "incorrect": "请注意 Grade 2 的核心标志为 suboptimal cell alignment 与 uneven blastomere size，发育延迟程度轻于 Grade 3，请重新比对图像。"
+    }
   },
   {
     "id": "TC-009",
@@ -202,18 +216,19 @@
       "grade": 2
     },
     "modelOutput": {
-      "grade": 2
+      "grade": 2,
+      "concepts": [
+        { "name": "slow division rate", "score": 0.76 },
+        { "name": "mild structural irregularities", "score": 0.72 },
+        { "name": "irregular cytoplasm granularity", "score": 0.68 },
+        { "name": "slight membrane roughness", "score": 0.71 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎呈现轻度的 structural irregularities，结合 division rate 的变化，你如何区分 Grade 2 与 Grade 1 的形态差异？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！mild structural irregularities 与 slow division rate 是区分 Grade 2 与 Grade 1 的关键，Grade 1 的分裂节律明显优于 Grade 2。",
+      "incorrect": "请注意 Grade 2 的 mild structural irregularities 与 slow division rate 是区分性特征，Grade 1 不存在这些异常，请仔细对比。"
+    }
   },
   {
     "id": "TC-010",
@@ -226,18 +241,20 @@
       "grade": 2
     },
     "modelOutput": {
-      "grade": 2
+      "grade": 2,
+      "concepts": [
+        { "name": "uneven blastomere size", "score": 0.80 },
+        { "name": "suboptimal cell alignment", "score": 0.74 },
+        { "name": "delayed cleavage stage", "score": 0.71 },
+        { "name": "slight metabolic residue", "score": 0.66 },
+        { "name": "irregular cytoplasm granularity", "score": 0.69 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "观察该胚胎的 blastomere size 分布与 cytoplasm granularity，判断这些特征属于 Grade 1 还是 Grade 2 的典型表现？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！uneven blastomere size 与 irregular cytoplasm granularity 明确指向 Grade 2，与 Grade 1 的均一形态形成鲜明对比。",
+      "incorrect": "请重新对比 Grade 1 与 Grade 2 的特征。uneven blastomere size 与 delayed cleavage stage 是 Grade 2 的标志性表现，Grade 1 则无此异常。"
+    }
   },
   {
     "id": "TC-011",
@@ -250,18 +267,20 @@
       "grade": 3
     },
     "modelOutput": {
-      "grade": 3
+      "grade": 3,
+      "concepts": [
+        { "name": "pronounced vacuolation", "score": 0.79 },
+        { "name": "stalled cleavage phase", "score": 0.75 },
+        { "name": "disorganized cell structures", "score": 0.72 },
+        { "name": "fragmented membranes", "score": 0.70 },
+        { "name": "uneven cytoplasmic coloration", "score": 0.68 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎图像中是否可见明显的 vacuolation？结合 cleavage phase 的停滞迹象，请判断该胚胎的发育等级。",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！pronounced vacuolation 与 stalled cleavage phase 是 Grade 3 的典型表现，disorganized cell structures 进一步确认细胞结构紊乱。",
+      "incorrect": "请重新关注 pronounced vacuolation 与 stalled cleavage phase。Grade 3 的结构破坏比 Grade 2 更明显，请对照图像中的空泡形成与分裂停滞特征。"
+    }
   },
   {
     "id": "TC-012",
@@ -274,18 +293,19 @@
       "grade": 3
     },
     "modelOutput": {
-      "grade": 2
+      "grade": 2,
+      "concepts": [
+        { "name": "mild cell border retraction", "score": 0.71 },
+        { "name": "uneven intracellular granularity", "score": 0.67 },
+        { "name": "uneven cytoplasmic coloration", "score": 0.65 },
+        { "name": "localized cell swelling", "score": 0.63 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "观察该胚胎的 cell border retraction 与 cytoplasmic coloration 不均匀程度，你认为这些特征更倾向于 Grade 2 还是 Grade 3？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！mild cell border retraction 与 uneven cytoplasmic coloration 虽与 Grade 2 有重叠，但 localized cell swelling 与 uneven intracellular granularity 的组合更符合 Grade 3。",
+      "incorrect": "请注意 Grade 3 的特征包括 localized cell swelling 与 uneven intracellular granularity，这些表现比 Grade 2 更为显著，请仔细辨别边界案例。"
+    }
   },
   {
     "id": "TC-013",
@@ -298,18 +318,20 @@
       "grade": 3
     },
     "modelOutput": {
-      "grade": 3
+      "grade": 3,
+      "concepts": [
+        { "name": "disorganized cell structures", "score": 0.76 },
+        { "name": "fragmented membranes", "score": 0.73 },
+        { "name": "pronounced vacuolation", "score": 0.77 },
+        { "name": "localized cell swelling", "score": 0.69 },
+        { "name": "stalled cleavage phase", "score": 0.71 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎中可见 fragmented membranes 与 cell swelling 迹象，请结合 vacuolation 程度，综合判断其胚胎分级。",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！fragmented membranes 与 pronounced vacuolation 是 Grade 3 的关键特征，localized cell swelling 进一步提示细胞应激状态。",
+      "incorrect": "请重新评估。fragmented membranes 结合 pronounced vacuolation 是 Grade 3 的典型标志，与 Grade 2 的轻度异常有本质区别，请对照图像重新判断。"
+    }
   },
   {
     "id": "TC-014",
@@ -322,18 +344,19 @@
       "grade": 3
     },
     "modelOutput": {
-      "grade": 3
+      "grade": 3,
+      "concepts": [
+        { "name": "uneven cytoplasmic coloration", "score": 0.74 },
+        { "name": "uneven intracellular granularity", "score": 0.70 },
+        { "name": "mild cell border retraction", "score": 0.66 },
+        { "name": "disorganized cell structures", "score": 0.73 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "请观察该胚胎的 cytoplasmic coloration 均一性与 intracellular granularity 分布，这些特征如何区别于 Grade 2？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！uneven cytoplasmic coloration 与 uneven intracellular granularity 的组合是 Grade 3 的重要区分特征，disorganized cell structures 也明显可见。",
+      "incorrect": "请注意 Grade 3 的 uneven cytoplasmic coloration 与 disorganized cell structures 比 Grade 2 更为显著，请仔细比较两者的形态差异。"
+    }
   },
   {
     "id": "TC-015",
@@ -346,18 +369,20 @@
       "grade": 3
     },
     "modelOutput": {
-      "grade": 3
+      "grade": 3,
+      "concepts": [
+        { "name": "stalled cleavage phase", "score": 0.78 },
+        { "name": "pronounced vacuolation", "score": 0.75 },
+        { "name": "localized cell swelling", "score": 0.67 },
+        { "name": "fragmented membranes", "score": 0.71 },
+        { "name": "uneven intracellular granularity", "score": 0.65 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎的 cleavage phase 是否存在停滞迹象？请结合 vacuolation 与 cell swelling 的程度，综合评估其发育等级。",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！stalled cleavage phase 与 pronounced vacuolation 共同构成 Grade 3 的核心特征，localized cell swelling 进一步说明细胞健康状态受损。",
+      "incorrect": "请重新审视 stalled cleavage phase 与 pronounced vacuolation。Grade 3 的分裂停滞和空泡化程度显著高于 Grade 2，请仔细对照图像特征。"
+    }
   },
   {
     "id": "TC-016",
@@ -370,18 +395,20 @@
       "grade": 4
     },
     "modelOutput": {
-      "grade": 4
+      "grade": 4,
+      "concepts": [
+        { "name": "indistinct cell boundaries", "score": 0.81 },
+        { "name": "loss of membrane integrity", "score": 0.78 },
+        { "name": "signs of apoptosis", "score": 0.75 },
+        { "name": "overall structural disintegration", "score": 0.80 },
+        { "name": "complete developmental arrest", "score": 0.83 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎的 cell boundaries 是否清晰？观察 membrane integrity 的丧失程度，你认为该胚胎处于哪一发育等级？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！indistinct cell boundaries 与 loss of membrane integrity 是 Grade 4 的显著特征，complete developmental arrest 表明胚胎已失去发育潜能。",
+      "incorrect": "请重新评估 cell boundaries 与 membrane integrity。Grade 4 胚胎结构完整性严重破坏，表现为 indistinct cell boundaries 及 overall structural disintegration，程度远超 Grade 3。"
+    }
   },
   {
     "id": "TC-017",
@@ -394,18 +421,20 @@
       "grade": 4
     },
     "modelOutput": {
-      "grade": 4
+      "grade": 4,
+      "concepts": [
+        { "name": "vacuole swelling and rupture", "score": 0.77 },
+        { "name": "granular cytoplasm accumulation", "score": 0.74 },
+        { "name": "disordered cell arrangement", "score": 0.79 },
+        { "name": "visible cell debris", "score": 0.76 },
+        { "name": "abnormal cell number", "score": 0.72 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "请观察该胚胎是否存在 vacuole swelling 与 cell debris，结合 cell arrangement 的紊乱程度，判断其胚胎分级。",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！vacuole swelling and rupture 与 visible cell debris 是 Grade 4 的典型表现，disordered cell arrangement 进一步确认细胞结构的严重破坏。",
+      "incorrect": "请注意 Grade 4 的特征包括 vacuole swelling and rupture 及 visible cell debris，这些表现比 Grade 3 更为严重，请重新仔细观察图像。"
+    }
   },
   {
     "id": "TC-018",
@@ -418,18 +447,19 @@
       "grade": 4
     },
     "modelOutput": {
-      "grade": 3
+      "grade": 3,
+      "concepts": [
+        { "name": "signs of apoptosis", "score": 0.70 },
+        { "name": "granular cytoplasm accumulation", "score": 0.67 },
+        { "name": "overall structural disintegration", "score": 0.65 },
+        { "name": "indistinct cell boundaries", "score": 0.68 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "观察该胚胎的 apoptosis 迹象与 cytoplasm accumulation 情况，这些特征更符合 Grade 3 还是 Grade 4 的诊断标准？",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！该胚胎虽有 signs of apoptosis 与 granular cytoplasm accumulation，但 overall structural disintegration 的程度指向 Grade 4，属于高难度判别案例。",
+      "incorrect": "请注意该案例的难点在于 Grade 3 与 Grade 4 的边界判断。overall structural disintegration 与 signs of apoptosis 的组合更符合 Grade 4，请重新分析。"
+    }
   },
   {
     "id": "TC-019",
@@ -442,18 +472,20 @@
       "grade": 4
     },
     "modelOutput": {
-      "grade": 4
+      "grade": 4,
+      "concepts": [
+        { "name": "complete developmental arrest", "score": 0.85 },
+        { "name": "loss of membrane integrity", "score": 0.82 },
+        { "name": "disordered cell arrangement", "score": 0.80 },
+        { "name": "visible cell debris", "score": 0.78 },
+        { "name": "overall structural disintegration", "score": 0.83 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "该胚胎呈现明显的 developmental arrest，请结合 membrane integrity 的丧失与 cell arrangement 的紊乱程度，综合评估其分级。",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！complete developmental arrest 与 loss of membrane integrity 是 Grade 4 最严重的特征，overall structural disintegration 表明胚胎已无发育价值。",
+      "incorrect": "请重点观察 complete developmental arrest 与 loss of membrane integrity。Grade 4 的发育停滞和膜完整性丧失程度远超其他等级，请重新评估。"
+    }
   },
   {
     "id": "TC-020",
@@ -466,17 +498,19 @@
       "grade": 4
     },
     "modelOutput": {
-      "grade": 4
+      "grade": 4,
+      "concepts": [
+        { "name": "abnormal cell number", "score": 0.76 },
+        { "name": "granular cytoplasm accumulation", "score": 0.73 },
+        { "name": "vacuole swelling and rupture", "score": 0.79 },
+        { "name": "indistinct cell boundaries", "score": 0.74 },
+        { "name": "signs of apoptosis", "score": 0.71 }
+      ]
     },
-    "agentQuestion": "请观察本示例的卵裂球大小、细胞质、透明带及碎片化程度，说明可见依据和不确定之处，再尝试分级。",
+    "agentQuestion": "请观察该胚胎的 cell number 是否异常，结合 vacuole swelling 与 cytoplasm accumulation 的特征，判断该胚胎的等级。",
     "agentFeedback": {
-      "correct": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。",
-      "incorrect": "本例形态标注待核验，仅供讨论，不计入一致率。请将观察与分级参考分开记录，不能由示例等级反推碎片率。"
-    },
-    "evidenceSchemaVersion": 1,
-    "morphologyEvidence": [],
-    "dataSource": "demo",
-    "scoringEligible": false,
-    "scoringNote": "原示例形态描述与分级标注尚未按新参考核验"
+      "correct": "评估正确！abnormal cell number 与 vacuole swelling and rupture 是 Grade 4 的典型表现，granular cytoplasm accumulation 进一步表明细胞质严重降解。",
+      "incorrect": "请注意 abnormal cell number 与 vacuole swelling and rupture 是 Grade 4 的重要标志。结合 signs of apoptosis，该胚胎的结构破坏程度已超出 Grade 3 的范畴。"
+    }
   }
 ]

@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { getMorphologyEvidence, evidenceText, linkedRegion } from '../src/utils/morphologyEvidence.js'
-import { isScoringEligible, GRADE_REFERENCE } from '../src/constants/gradingReference.js'
+import { makeMorphologyExample } from '../src/mock/morphologyExamples.js'
 const make = (fields = {}) => ({ evidenceSchemaVersion: 1, morphologyEvidence: [{ id: 'C08', status: 'recorded', observation: null, value: 0, unit: '%', source: 'validated_measurement', method: 'reviewed segmentation', ...fields }] })
 test('legacy contributions never become measurements', () => {
   const e = getMorphologyEvidence({ conceptScores: [{id:'C08',percent:95,score:95}] })
@@ -30,10 +30,12 @@ test('region must belong to this image and fit normalized bounds', () => {
   assert.equal(linkedRegion(record,{...e,region:{...e.region,box:[.9,0,.3,1]}}),null)
   assert.equal(linkedRegion(record,{...e,status:'pending'}),null)
 })
-test('25 percent boundary and conflicts need traceable annotation; no automatic grading', () => {
-  assert.equal(isScoringEligible({fragmentationPercent:25}),false)
-  assert.equal(isScoringEligible({fragmentationPercent:25,annotationReference:'review-1'}),true)
-  assert.equal(isScoringEligible({annotationConflict:true,annotationReference:'review-1'}),false)
-  assert.equal(isScoringEligible({scoringEligible:false}),false)
-  assert.deepEqual(GRADE_REFERENCE.map(x=>x.desc),['细胞均一，碎片 < 10%','轻度不均一，碎片 10–25%','明显不均一，碎片 25–50%','严重碎片化，碎片 > 50%'])
+test('explicit built-in examples keep their provenance and never fill unknown cases', () => {
+  const record = { evidenceSchemaVersion: 1, morphologyEvidence: makeMorphologyExample(['均一', '清晰、均匀', '连续、完整', 6]) }
+  const items = getMorphologyEvidence(record)
+  assert.equal(items[0].observation, '均一')
+  assert.equal(items[3].value, 6)
+  assert.ok(items.every(e => e.source === 'demo' && e.region === null))
+  assert.deepEqual(makeMorphologyExample(), [])
+  assert.ok(getMorphologyEvidence({grade:'grade1'}).every(e=>e.status==='pending'))
 })

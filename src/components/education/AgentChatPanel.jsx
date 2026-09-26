@@ -1,12 +1,4 @@
-import { TEACHING_PROMPT, GRADE_REFERENCE, GRADING_NOTE } from '../../constants/gradingReference'
-import { evidenceSummary } from '../../utils/morphologyEvidence'
-/**
- * AgentChatPanel.jsx — 形态教学助手对话面板
- *
- * - 调用 Anthropic API（claude-sonnet-4-20250514）
- * - 5 秒超时后降级至预设 QA
- * - API Key 来自 VITE_ANTHROPIC_API_KEY
- */
+/** 保留原有界面和兼容接口。 */
 import { useState, useEffect, useRef } from 'react'
 import { Bot, Send } from 'lucide-react'
 import { useAuth } from '@/context/AppContext'
@@ -14,10 +6,32 @@ import { useAppContext } from '@/context/AppContext'
 import { logEducationAction, EDUCATION_ACTIONS } from '@/utils/educationLogger'
 
 /* ── System Prompt ── */
-const SYSTEM_PROMPT = TEACHING_PROMPT
+const SYSTEM_PROMPT = `你是 胚胎评估教学助手。你的知识边界严格限定为：
+1. Day 3 卵裂期胚胎形态学评估
+2. Grade 1–4 分级标准（教学分级参考）
+3. 以下概念名称（当前训练标签，不得使用其他概念）：
+   Grade 1：symmetrical blastomeres, uniform cell size, clear cytoplasm, no fragmentation,
+   rapid cleavage rate, intact zona pellucida, well-defined intercellular borders,
+   compact blastomere alignment, minimal metabolic debris, smooth membrane boundaries,
+   homogeneous texture, balanced cell division, no nuclear fragments
+   Grade 2：uneven blastomere size, delayed cleavage stage, suboptimal cell alignment,
+   slow division rate, slight membrane roughness, slight metabolic residue,
+   mild structural irregularities, irregular cytoplasm granularity
+   Grade 3：pronounced vacuolation, stalled cleavage phase, disorganized cell structures,
+   fragmented membranes, uneven cytoplasmic coloration, mild cell border retraction,
+   localized cell swelling, uneven intracellular granularity
+   Grade 4：indistinct cell boundaries, loss of membrane integrity, vacuole swelling and rupture,
+   signs of apoptosis, overall structural disintegration, disordered cell arrangement,
+   granular cytoplasm accumulation, abnormal cell number, visible cell debris,
+   complete developmental arrest
+
+你绝对不得讨论：移植建议、临床决策、囊胚评估（Day 5）、其他胚胎类型、教学范围外的任何概念。
+当学员回答时，基于 Grade 特征给出有教学价值的反馈，鼓励深入思考。
+回复使用中文，专业术语保留英文原名（如 symmetrical blastomeres）。
+回复长度：100–200 字，不使用 Markdown 格式符号。`
 
 /* ── API 调用 ── */
-async function callAnthropicAPI(messages, caseData) {
+async function callAnthropicAPI(messages) {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
 
@@ -31,7 +45,7 @@ async function callAnthropicAPI(messages, caseData) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: SYSTEM_PROMPT + '\n当前案例（演示）：' + evidenceSummary(caseData),
+        system: SYSTEM_PROMPT,
         messages: messages.map(m => ({ role: m.role, content: m.content })),
       }),
     })
@@ -45,9 +59,14 @@ async function callAnthropicAPI(messages, caseData) {
 
 /* ── 降级回复 ── */
 function getFallbackReply(userInput, caseData) {
-  if (/阈值|标准|碎片|25/.test(userInput)) return GRADE_REFERENCE.map(r => `Grade ${r.g}：${r.desc}`).join('；') + '。' + GRADING_NOTE
-  return evidenceSummary(caseData) + '本例标注待核验，仅供讨论，不计入一致率。'
-
+  const correctGrade = caseData.humanLabel.grade
+  const inputLower = userInput.toLowerCase()
+  const isCorrect = [
+    `grade ${correctGrade}`,
+    `${correctGrade}级`,
+    ['一', '二', '三', '四'][correctGrade - 1] + '级',
+  ].some(kw => inputLower.includes(kw))
+  return isCorrect ? caseData.agentFeedback.correct : caseData.agentFeedback.incorrect
 }
 
 /* ── 时间格式 ── */
@@ -146,7 +165,7 @@ export default function AgentChatPanel({ caseData }) {
     })
 
     try {
-      const reply = await callAnthropicAPI([...messages, userMsg], caseData)
+      const reply = await callAnthropicAPI([...messages, userMsg])
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'assistant',
@@ -177,10 +196,10 @@ export default function AgentChatPanel({ caseData }) {
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            形态教学助手
+            胚胎教学助手
           </p>
           <p className="text-xs text-gray-400">
-            D3 形态观察与分级参考 · Grade 1–4
+            D3 胚胎形态教学 · 知识边界：Day 3 胚胎 Grade 1–4
           </p>
         </div>
         <span className="ml-auto flex items-center gap-1 text-xs text-gray-400">

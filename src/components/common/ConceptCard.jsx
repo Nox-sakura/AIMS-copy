@@ -1,4 +1,3 @@
-import { evidenceText } from '../../utils/morphologyEvidence'
 function ConceptSVG({ id, color }) {
   const props = { viewBox: '0 0 36 36', width: 36, height: 36, fill: 'none' }
   switch (id) {
@@ -103,16 +102,47 @@ function ConceptSVG({ id, color }) {
   }
 }
 
-export default function ConceptCard({ concept, isHovered, onClick }) {
-  const color = concept.status === 'recorded' ? '#1A6EBD' : '#9CA3AF'
-  return <button type="button" aria-pressed={!!isHovered} onClick={onClick}
-    className="relative text-left w-full bg-white rounded-lg overflow-hidden transition-all duration-200"
-    style={{boxShadow: isHovered ? `0 4px 16px ${color}33, 0 0 0 2px ${color}` : '0 1px 4px rgba(0,0,0,0.07)', transform: isHovered ? 'scale(1.03)' : 'scale(1)'}}>
-    <div className="absolute left-0 top-0 bottom-0 w-1" style={{backgroundColor:color}} />
-    <div className="pl-4 pr-3 py-3"><div className="flex gap-2"><ConceptSVG id={concept.id} color={color}/><div className="min-w-0"><p className="text-sm font-semibold text-medical-text">{concept.name}</p><p className="text-xs text-medical-muted mt-1">{concept.shortDesc}</p></div></div>
-    <div className="flex flex-wrap justify-between gap-2 mt-3 text-xs"><span style={{color}}>{evidenceText(concept)}</span><span className="bg-gray-100 text-medical-muted rounded-full px-2 py-0.5">{concept.sourceLabel}</span></div></div>
-  </button>
+export default function ConceptCard({ concept }) {
+  const recorded = concept.status === 'recorded'
+  const isFragmentation = concept.id === 'C08'
+  const color = !recorded ? '#9CA3AF' : isFragmentation ? '#1A6EBD' : '#27AE60'
+  const hasValue = recorded && concept.value !== null
+
+  return (
+    <article className="relative bg-white rounded-lg overflow-hidden h-full"
+      style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.07)' }}>
+      <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: color }} />
+      <div className="pl-4 pr-3 py-3">
+        <div className="flex items-start gap-2">
+          <div className="flex-shrink-0"><ConceptSVG id={concept.id} color={color} /></div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-medical-text leading-tight">{concept.name}</p>
+            <p className="text-xs text-medical-muted mt-1 leading-snug">{concept.shortDesc}</p>
+          </div>
+        </div>
+        <div className="mt-3 text-sm font-semibold" style={{ color }}>
+          {recorded ? concept.observation : concept.status === 'unreadable' ? '不可判读' : '待复核'}
+          {hasValue && <span className="ml-2 tabular-nums">{concept.value}{concept.unit}</span>}
+        </div>
+        {isFragmentation && hasValue && concept.unit === '%' && (
+          <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-full rounded-full" style={{ width: `${Math.max(0, Math.min(100, concept.value))}%`, backgroundColor: color }} />
+          </div>
+        )}
+      </div>
+    </article>
+  )
 }
-export function ConceptCardGroup({ scores, hoveredId, onHover }) {
-  return <div className="space-y-3"><p className="text-xs font-semibold text-medical-muted">形态观察</p><div className="grid grid-cols-1 md:grid-cols-2 gap-3">{scores.map(s => <ConceptCard key={s.id} concept={s} isHovered={hoveredId === s.id} onClick={() => onHover?.(hoveredId === s.id ? null : s.id)}/>)}</div><p className="text-xs text-medical-muted leading-relaxed">仅展示有来源的观察记录；待复核不表示异常，也不代表测量值为零。</p></div>
+
+export function ConceptCardGroup({ scores }) {
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {scores.map(concept => <ConceptCard key={concept.id} concept={concept} />)}
+      </div>
+      <p className="text-[10px] text-gray-400 leading-relaxed">
+        以上形态数据、热力图及模型指标为演示预设，非本图像实测结果。
+      </p>
+    </div>
+  )
 }

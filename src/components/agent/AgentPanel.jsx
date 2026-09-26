@@ -23,7 +23,7 @@ import {
 const SHORTCUTS = [
   { label: '查看待复核报告',              fillOnly: false },
   { label: '查看已拒绝的报告',            fillOnly: false },
-  { label: '该患者本周期胚胎形态对比',        fillOnly: false },
+  { label: '该患者本周期胚胎得分对比',        fillOnly: false },
   { label: '查询患者 P-　报告列表',        fillOnly: true  },
 ]
 
@@ -32,7 +32,7 @@ const WELCOME = {
   id: 0,
   role: 'assistant',
   type: 'text',
-  content: '您好，我是临床智能助手。我可以帮您查询患者信息、检索评估报告，或对比患者本次周期各胚胎形态观察。请描述您的需求，或点击下方快捷指令开始。',
+  content: '您好，我是临床智能助手。我可以帮您查询患者信息、检索评估报告，或对比患者本次周期各胚胎概念得分。请描述您的需求，或点击下方快捷指令开始。',
 }
 
 /* ── 意图解析（rule-based，无需额外 API 调用） ── */
