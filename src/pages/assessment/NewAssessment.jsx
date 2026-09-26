@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Search, Upload, X, CheckCircle, AlertTriangle, Check, Loader2,
-  Zap, BarChart2, Crosshair, Info,
+  BarChart2,
 } from 'lucide-react'
 import PageHeader from '../../components/PageHeader'
 import PatientInfoBar from '../../components/common/PatientInfoBar'
@@ -14,54 +14,16 @@ import { predictEmbryo } from '../../api/mcaApi'
 
 const STEPS = ['选择患者', '上传图像', '预处理确认', '提交评估']
 
-/* ── 论文方法展示选项（保留内部 key，兼容已有报告） ── */
-const MODELS = [
-  {
-    key:    'MCA-Lite',
-    label:  'LWMA-Net',
-    sub:    '2022 · 轻量形态注意力网络',
-    Icon:   Zap,
-    color:  '#E67E22',
-    bg:     '#FEF3E2',
-    time:   '论文未报告可比推理耗时',
-    metricLabel: '四分类 AUC（验证 / 独立测试）',
-    metric: '0.9688 / 0.9430',
-    concepts: '未报告',
-    scene:  'Day 3 静态形态分级研究',
-    tags:   ['形态注意力', '多尺度融合'],
-    recommended: false,
-  },
-  {
-    key:    'MCA-Standard',
-    label:  'EL 多网络融合模型',
-    sub:    '2021 · 特征筛选与逻辑回归融合',
-    Icon:   BarChart2,
-    color:  '#1A6EBD',
-    bg:     '#EBF4FF',
-    time:   '论文未报告可比推理耗时',
-    metricLabel: '四分类 ACC（验证 / 独立测试）',
-    metric: '74.14% / 74.93%',
-    concepts: '未报告',
-    scene:  '融合四种 CNN 骨干网络的形态特征',
-    tags:   ['特征筛选', '逻辑回归融合'],
-    recommended: false,
-  },
-  {
-    key:    'MCA-Pro',
-    label:  'CNN 特征提取骨干',
-    sub:    'DenseNet169 · InceptionV3 · ResNet50 · VGG19',
-    Icon:   Crosshair,
-    color:  '#27AE60',
-    bg:     '#E8F8EF',
-    time:   '论文未报告可比推理耗时',
-    metricLabel: '论文指标',
-    metric: '未在此处单列',
-    concepts: '未报告',
-    scene:  '2021 年研究用于特征提取的四种网络架构',
-    tags:   ['四种网络架构', '特征提取'],
-    recommended: false,
-  },
-]
+/* ── 单一评估模型（保留内部 key，兼容已有报告） ── */
+const MODEL = {
+  key:   'MCA-Standard',
+  label: 'LWMA-Net',
+  sub:   '轻量化胚胎形态分级网络',
+  Icon:  BarChart2,
+  color: '#1A6EBD',
+  bg:    '#EBF4FF',
+  tags:  ['Day 3 胚胎形态分级'],
+}
 
 /* ── 步骤条 ── */
 function Stepper({ steps, current }) {
@@ -91,150 +53,50 @@ function Stepper({ steps, current }) {
   )
 }
 
-/* ── 模型对比弹窗 ── */
-function ModelCompareModal({ onClose }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-medical-text">模型详细对比</h3>
-          <button onClick={onClose}><X className="w-5 h-5 text-medical-muted" /></button>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-medical-bg">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-medical-muted border border-medical-border">对比项</th>
-                {MODELS.map(m => (
-                  <th key={m.key} className="px-4 py-2.5 text-center text-xs font-semibold border border-medical-border" style={{ color: m.color }}>
-                    {m.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['论文报告的指标', m => m.metric],
-                ['指标口径', m => m.metricLabel],
-                ['推理耗时', m => m.time],
-                ['概念数量', m => m.concepts],
-                ['研究内容', m => m.scene],
-              ].map(([label, getter]) => (
-                <tr key={label} className="hover:bg-medical-bg/50">
-                  <td className="px-4 py-2.5 text-medical-muted border border-medical-border">{label}</td>
-                  {MODELS.map(m => (
-                    <td key={m.key} className={`px-4 py-2.5 text-center border border-medical-border ${m.recommended ? 'font-medium' : ''}`}>
-                      {getter(m)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="text-xs text-medical-muted text-center mb-3">
-          三项按两篇参考研究中的方法整理；论文未提供的模型耗时与概念数量不作推定。
-          此处为方法展示选项，不代表系统已分别接入三套模型。
-        </p>
-        <button onClick={onClose} className="btn-secondary w-full mt-4">关闭</button>
-      </div>
-    </div>
-  )
-}
-
-/* ── 模型选择卡片区 ── */
-function ModelSelector({ selected, onSelect, lastUsed }) {
-  const [showCompare, setShowCompare] = useState(false)
+/* ── 单一模型卡片 ── */
+function ModelSelector() {
+  const m = MODEL
+  const { Icon } = m
   return (
     <div className="mt-6 space-y-3">
       <div>
-        <h4 className="text-sm font-semibold text-medical-text">选择评估模型</h4>
-        <p className="text-xs text-medical-muted mt-0.5">参考研究方法展示，不代表三种临床模型档位</p>
+        <h4 className="text-sm font-semibold text-medical-text">评估模型</h4>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {MODELS.map(m => {
-          const isSelected = selected === m.key
-          const isLastUsed = lastUsed === m.key && !isSelected
-          const { Icon } = m
-          return (
+      <div className="grid grid-cols-1 gap-3 max-w-md">
+        <div
+          className="relative rounded-xl border-2"
+          style={{
+            borderColor: m.color,
+            backgroundColor: m.bg,
+            boxShadow: `0 0 0 1px ${m.color}40`,
+          }}
+        >
+          <span className="absolute top-2.5 right-2.5">
+            <CheckCircle size={16} style={{ color: m.color }} />
+          </span>
+
+          <div className="p-4 pr-8">
             <div
-              key={m.key}
-              onClick={() => onSelect(m.key)}
-              className="relative rounded-xl border-2 cursor-pointer transition-all duration-150"
-              style={{
-                borderColor: isSelected ? m.color : '#DDE3EC',
-                backgroundColor: isSelected ? m.bg : '#fff',
-                boxShadow: isSelected ? `0 0 0 1px ${m.color}40` : undefined,
-              }}
+              className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
+              style={{ backgroundColor: m.bg }}
             >
-              {/* 选中勾（右上角，不与badge重叠） */}
-              {isSelected && (
-                <span className="absolute top-2.5 right-2.5">
-                  <CheckCircle size={16} style={{ color: m.color }} />
-                </span>
-              )}
-
-              <div className="p-4 pr-8">
-                {/* 图标 */}
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
-                  style={{ backgroundColor: m.bg }}
-                >
-                  <Icon size={18} style={{ color: m.color }} />
-                </div>
-
-                <div className="text-sm font-bold text-medical-text flex items-center gap-1">
-                  {m.label}
-                  {m.recommended && (
-                    <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full bg-medical-blue text-white font-medium">推荐</span>
-                  )}
-                </div>
-                <div className="text-xs text-medical-muted mb-2">{m.sub}</div>
-
-                <div className="space-y-1 text-xs text-medical-muted">
-                  <div>⚡ {m.time}</div>
-                  <div className="leading-snug">适用：{m.scene}</div>
-                </div>
-
-                <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
-                  <div className="text-xs">
-                    <div className="text-medical-muted">{m.metricLabel}</div>
-                    <div className="font-semibold mt-0.5" style={{ color: m.color }}>{m.metric}</div>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-medical-muted">概念数量</span>
-                    <span className="font-semibold" style={{ color: m.color }}>{m.concepts}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {m.tags.map(t => (
-                    <span key={t} className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-medical-muted">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                {/* 上次使用提示 */}
-                {isLastUsed && (
-                  <div className="mt-2 text-[10px] text-medical-muted">上次使用</div>
-                )}
-              </div>
+              <Icon size={18} style={{ color: m.color }} />
             </div>
-          )
-        })}
+
+            <div className="text-sm font-bold text-medical-text">{m.label}</div>
+            <div className="text-xs text-medical-muted mb-2">{m.sub}</div>
+
+            <div className="flex flex-wrap gap-1 mt-2">
+              {m.tags.map(t => (
+                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-medical-muted">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-
-      <button
-        onClick={() => setShowCompare(true)}
-        className="flex items-center gap-1 text-xs text-medical-blue hover:underline"
-      >
-        <Info size={12} />
-        了解三个模型的详细差异 →
-      </button>
-
-      {showCompare && <ModelCompareModal onClose={() => setShowCompare(false)} />}
     </div>
   )
 }
@@ -264,16 +126,6 @@ export default function NewAssessment() {
     getPatients().then(setPatientsList)
     getAssessments().then(setAssessmentsList)
   }, [])
-
-  // 模型选择（localStorage 记忆）
-  const lastUsedModel = localStorage.getItem('aims_lastModel') ?? null
-  const [selectedModel, setSelectedModel] = useState(
-    lastUsedModel ?? 'MCA-Standard'
-  )
-  const handleModelSelect = (model) => {
-    setSelectedModel(model)
-    localStorage.setItem('aims_lastModel', model)
-  }
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files)
@@ -371,7 +223,7 @@ export default function NewAssessment() {
     }
   }
 
-  const modelInfo = MODELS.find(m => m.key === selectedModel) ?? MODELS[1]
+  const modelInfo = MODEL
 
   return (
     <div className="flex flex-col h-full">
@@ -632,12 +484,11 @@ export default function NewAssessment() {
                 </div>
               ))}
               <div className="mt-4 pt-4 border-t border-medical-border">
-                <h4 className="text-sm font-semibold text-medical-text mb-3">选择评估模型</h4>
-                <ModelSelector selected={selectedModel} onSelect={handleModelSelect} lastUsed={lastUsedModel} />
+                <h4 className="text-sm font-semibold text-medical-text mb-3">评估模型</h4>
+                <ModelSelector />
               </div>
               <button
                 onClick={() => {
-                  if (!selectedModel) { showToast('请选择评估模型', 'warning'); return }
                   setAccepted(Object.fromEntries(images.map(i => [i.id, true])))
                   setStep(3)
                   setTimeout(() => scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' }), 0)
@@ -660,12 +511,11 @@ export default function NewAssessment() {
                   { label: '取卵日期', value: assessmentsList.filter(a => a.patientId === selectedPatient?.id).at(-1)?.retrievalDate ?? '2026-03-10' },
                   { label: '胚胎编号', value: 'E-03-A' },
                   { label: '图像数量', value: `${images.length} 张` },
-                  { label: '评估模型', value: `${modelInfo.label}（${modelInfo.sub}）— AUC 参考 ${modelInfo.auc}` },
+                  { label: '评估模型', value: modelInfo.label },
                   { label: '提交医师',   value: currentUser?.name ?? '李明华' },
                   { label: '操作科室',   value: selectedPatient?.department ?? '生殖医学科' },
                   { label: '提交时间',   value: new Date().toLocaleString('zh-CN', { hour12: false }) },
                   { label: '预处理状态', value: images.every(img => accepted[img.id]) ? '全部已确认' : `${Object.values(accepted).filter(Boolean).length}/${images.length} 张已确认` },
-                  { label: '预计耗时',   value: modelInfo.time },
                 ].map(r => (
                   <div key={r.label} className="flex items-center justify-between border-b border-medical-border pb-2 last:border-0 last:pb-0">
                     <span className="text-medical-muted">{r.label}</span>
@@ -686,7 +536,7 @@ export default function NewAssessment() {
                 </span>
               </label>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-                提交后系统将自动进行 AI 模型推理（{modelInfo.time}），报告生成后将以消息通知提醒您。
+                提交后系统将自动进行 AI 模型推理，报告生成后将以消息通知提醒您。
               </div>
               <button
                 onClick={handleSubmit}
