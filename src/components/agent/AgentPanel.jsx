@@ -32,7 +32,7 @@ const WELCOME = {
   id: 0,
   role: 'assistant',
   type: 'text',
-  content: '您好，我是临床智能助手。我可以帮您查询患者信息、检索评估报告，或对比患者本次周期各胚胎概念得分。请描述您的需求，或点击下方快捷指令开始。',
+  content: '您好，我是临床智能助手。我可以帮您查询患者信息、检索评估报告，或对比患者本次周期评估记录的形态观察。请描述您的需求，或点击下方快捷指令开始。',
 }
 
 /* ── 意图解析（rule-based，无需额外 API 调用） ── */
@@ -135,7 +135,7 @@ export default function AgentPanel() {
         }
 
       } else if (intent.type === 'compare_embryos') {
-        setLoadingText('正在分析患者本周期胚胎数据...')
+        setLoadingText('正在读取患者本周期评估记录...')
         await new Promise(resolve => setTimeout(resolve, 2000))
         const result = await tool_compare_embryos(intent.patientId, intent.cycleNo, currentUser)
         setIsLoading(false)

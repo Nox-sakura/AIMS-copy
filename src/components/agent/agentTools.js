@@ -8,6 +8,7 @@ import { patients } from '../../mock/patients'
 import { assessments } from '../../mock/assessments'
 import { concepts } from '../../mock/concepts'
 import { operationLogs } from '../../mock/operationLogs'
+import { MORPHOLOGY_ITEMS, getMorphologyEvidence } from '../../utils/morphologyEvidence'
 
 const ROLE_LABEL = {
   embryologist: '胚胎学家',
@@ -100,25 +101,42 @@ export async function tool_chat(userMessage) {
   return messageOutput?.content?.[0]?.text ?? '暂时无法回复，请稍后重试。'
 }
 
-/**
- * 对比指定患者本次周期所有胚胎的概念得分
- */
+// 浮动助手中两份内置评估记录的参考分；不从旧概念分或模型等级换算。
+const COMPARISON_EXAMPLE_SCORES = {
+  'ASS-2026-0024': { C01: 94, C02: 90, C04: 95 },
+  'ASS-2026-0029': { C01: 76, C02: 83, C04: 92 },
+}
+
+/** 对比指定患者本周期的形态观察示例。 */
 export async function tool_compare_embryos(patientId, cycleNo, currentUser) {
   const cycleAssessments = assessments.filter(
     a => a.patientId === patientId && a.cycleNo === cycleNo
   )
   const embryos = cycleAssessments.map(a => {
-    const enrichedScores = a.conceptScores.map(cs => {
-      const concept = concepts.find(c => c.id === cs.id)
-      return { ...cs, nameCn: concept?.name ?? cs.id, nameEn: concept?.nameEn ?? cs.id }
-    })
-    return { ...a, conceptScores: enrichedScores }
+    const fragmentation = getMorphologyEvidence(a).find(e => e.id === 'C08')
+    return {
+      id: a.id,
+      embryoNo: a.embryoNo,
+      assessmentDate: a.assessmentDate,
+      grade: a.grade,
+      confidence: a.confidence,
+      comparisonValues: {
+        ...COMPARISON_EXAMPLE_SCORES[a.id],
+        C08: fragmentation?.status === 'recorded' && fragmentation.unit === '%'
+          ? fragmentation.value : null,
+      },
+    }
   })
-  appendLog('AI助手对比周期胚胎概念得分', `${patientId} 第${cycleNo}周期`, currentUser)
+  appendLog('AI助手对比周期评估形态观察', `${patientId} 第${cycleNo}周期`, currentUser)
   return {
     patientName: cycleAssessments[0]?.patientName ?? '未知',
     patientId,
     cycleNo,
+    comparisonRows: MORPHOLOGY_ITEMS.map(item => ({
+      id: item.id,
+      name: item.id === 'C08' ? '碎片率' : item.name,
+      unit: item.id === 'C08' ? '%' : '分',
+    })),
     embryos,
   }
 }

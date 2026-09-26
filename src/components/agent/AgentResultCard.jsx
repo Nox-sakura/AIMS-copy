@@ -97,11 +97,9 @@ export default function AgentResultCard({ type, data, onNavigate }) {
     )
   }
 
-  /* ── 胚胎概念得分对比 ── */
+  /* ── 本周期形态观察参考值对比 ── */
   if (type === 'embryo_comparison') {
-    const { patientName, cycleNo, embryos } = data
-    // 取第一条评估的概念列表作为行标题（所有评估概念 ID 相同）
-    const conceptRows = embryos[0]?.conceptScores ?? []
+    const { patientName, cycleNo, embryos, comparisonRows } = data
 
     return (
       <div className="bg-white border border-medical-border rounded-xl p-3 text-sm space-y-3">
@@ -109,13 +107,13 @@ export default function AgentResultCard({ type, data, onNavigate }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 font-medium text-medical-text">
             <FileText className="w-4 h-4 text-medical-blue flex-shrink-0" />
-            <span>{patientName} · 第{cycleNo}周期 · {embryos.length} 枚胚胎概念得分对比</span>
+            <span>{patientName} · 第{cycleNo}周期 · {embryos.length} 份评估记录对比</span>
           </div>
         </div>
 
         {/* 胚胎列头 */}
         <div className="grid gap-2" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
-          <div className="text-xs text-medical-muted font-medium py-1">概念</div>
+          <div className="text-xs text-medical-muted font-medium py-1">形态观察</div>
           {embryos.map(e => {
             const gs = GRADE_STYLES[e.grade] ?? GRADE_STYLES.grade1
             return (
@@ -127,32 +125,32 @@ export default function AgentResultCard({ type, data, onNavigate }) {
                   {gs.label}
                 </span>
                 <div className="text-[10px] text-medical-muted mt-0.5 truncate">{e.embryoNo}</div>
-                <div className="text-[10px] text-medical-muted">{e.assessmentDate}</div>
+                <div className="text-[10px] text-medical-muted" title={e.id}>记录 {e.id.split('-').at(-1)}</div>
               </div>
             )
           })}
         </div>
 
-        {/* 概念得分行 */}
+        {/* 形态观察参考值行 */}
         <div className="space-y-2 border-t border-medical-border/50 pt-2">
-          {conceptRows.map(cs => {
+          {comparisonRows.map(row => {
             return (
-              <div key={cs.id} className="grid gap-2 items-center" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
-                {/* 概念名 */}
-                <div className="text-xs text-medical-muted leading-tight">{cs.nameCn}</div>
-                {/* 各胚胎该概念得分 */}
+              <div key={row.id} className="grid gap-2 items-center" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
+                <div className="text-xs text-medical-muted leading-tight">{row.name}</div>
                 {embryos.map(e => {
-                  const score = e.conceptScores.find(s => s.id === cs.id)?.score ?? 0
+                  const score = e.comparisonValues[row.id]
                   const gs = GRADE_STYLES[e.grade] ?? GRADE_STYLES.grade1
                   return (
                     <div key={e.id}>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-semibold" style={{ color: gs.color }}>{score}</span>
+                        <span className="font-semibold" style={{ color: gs.color }}>
+                          {score == null ? '—' : `${score}${row.unit}`}
+                        </span>
                       </div>
                       <div className="h-1.5 bg-medical-bg rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all"
-                          style={{ width: `${score}%`, backgroundColor: gs.color }}
+                          style={{ width: `${score ?? 0}%`, backgroundColor: gs.color }}
                         />
                       </div>
                     </div>
@@ -165,7 +163,7 @@ export default function AgentResultCard({ type, data, onNavigate }) {
 
         {/* 综合置信度行 */}
         <div className="border-t border-medical-border/50 pt-2 grid gap-2" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
-          <div className="text-xs text-medical-muted font-medium">综合置信度</div>
+          <div className="text-xs text-medical-muted font-medium">报告置信度</div>
           {embryos.map(e => {
             const gs = GRADE_STYLES[e.grade] ?? GRADE_STYLES.grade1
             return (
@@ -175,6 +173,10 @@ export default function AgentResultCard({ type, data, onNavigate }) {
             )
           })}
         </div>
+
+        <p className="text-[10px] leading-relaxed text-medical-muted">
+          前三项为形态观察参考分（满分100）；碎片率及置信度均非图像实测。
+        </p>
 
         {/* 跳转链接行 */}
         <div className="border-t border-medical-border/50 pt-2 grid gap-2" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
