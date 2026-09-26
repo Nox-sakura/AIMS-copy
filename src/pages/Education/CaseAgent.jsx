@@ -36,7 +36,7 @@ export default function CaseAgent() {
 
       {/* 右栏：Agent 对话 */}
       <div className="flex-1 flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm min-h-[480px]">
-        {currentCase && <AgentChatPanel caseData={currentCase} />}
+        {currentCase && <AgentChatPanel key={currentCase.id} caseData={currentCase} />}
       </div>
     </div>
   )

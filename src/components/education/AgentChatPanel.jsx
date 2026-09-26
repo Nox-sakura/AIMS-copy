@@ -4,11 +4,13 @@ import { Bot, Send } from 'lucide-react'
 import { useAuth } from '@/context/AppContext'
 import { useAppContext } from '@/context/AppContext'
 import { logEducationAction, EDUCATION_ACTIONS } from '@/utils/educationLogger'
+import { getCasePresetReply } from './casePresetAnswers'
 
 /* ── System Prompt ── */
 const SYSTEM_PROMPT = `你是 Day 3 卵裂期胚胎形态评估教学助手。仅根据给定的人工分级与学员回答反馈，不要声称自己看到了图像。
 教学分级参考：Grade 1 碎片率 <10%、卵裂球较均一；Grade 2 碎片率 10–25%、可有轻度不均一；Grade 3 碎片率 25–50%、形态不均一更明显；Grade 4 碎片率 >50%、严重形态异常。分级还需综合卵裂球均一性等形态特征，不能只凭单一阈值。
 没有明确观察值时，不要编造碎片率、细胞数或图像细节。单张静态图像无法判断分裂速度、发育停滞或代谢状态，也不能据此推断移植或妊娠结局。原题若提到这些内容，请说明证据边界，转而讨论可见形态。
+前文的首轮反馈来自固定案例资料。回答后续追问时可以解释其判断依据，但不得把分级参考区间说成该图的实测碎片率。
 如果学员作出分级，先与人工分级核对，再简述理由。只讨论 Day 3 形态教学，不给临床处置建议；使用中文，100–200 字，不使用 Markdown。`
 
 /* ── API 调用 ── */
@@ -46,25 +48,6 @@ async function callDoubaoAPI(messages, caseData) {
   } finally {
     clearTimeout(timeoutId)
   }
-}
-
-/* ── 降级回复 ── */
-function getFallbackReply(userInput, caseData) {
-  const correctGrade = caseData.humanLabel.grade
-  const inputLower = userInput.toLowerCase()
-  const isCorrect = [
-    `grade ${correctGrade}`,
-    `${correctGrade}级`,
-    ['一', '二', '三', '四'][correctGrade - 1] + '级',
-  ].some(kw => inputLower.includes(kw))
-  const gradeReference = {
-    1: '碎片率通常低于 10%，卵裂球较均一',
-    2: '碎片率通常为 10–25%，可有轻度不均一',
-    3: '碎片率通常为 25–50%，形态不均一更明显',
-    4: '碎片率通常超过 50%，形态异常较重',
-  }
-  const lead = isCorrect ? '你的分级与本案例人工标注一致。' : '可对照本案例的人工标注继续核对。'
-  return `${lead}人工标注为 Grade ${correctGrade}；教学参考：${gradeReference[correctGrade]}。还需结合可见形态综合判断；单张图像不能确认分裂速度或发育结局。`
 }
 
 /* ── 时间格式 ── */
@@ -152,16 +135,28 @@ export default function AgentChatPanel({ caseData }) {
   const handleSend = async () => {
     if (!inputText.trim() || isLoading) return
 
-    const userMsg = { id: Date.now(), role: 'user', content: inputText, timestamp: new Date() }
-    setMessages(prev => [...prev, userMsg])
+    const userMsg = { id: Date.now(), role: 'user', content: inputText.trim(), timestamp: new Date() }
+    const isFollowUp = messages.some(message => message.role === 'user')
     setInputText('')
-    setIsLoading(true)
 
     logEducationAction(currentUser?.id ?? 'unknown', EDUCATION_ACTIONS.SUBMIT_ANSWER, {
       caseId: caseData.id,
-      messageLength: inputText.length,
+      messageLength: userMsg.content.length,
     })
 
+    if (!isFollowUp) {
+      setMessages(prev => [...prev, userMsg, {
+        id: userMsg.id + 1,
+        role: 'assistant',
+        content: getCasePresetReply(caseData, userMsg.content),
+        timestamp: new Date(),
+      }])
+      logEducationAction(currentUser?.id ?? 'unknown', EDUCATION_ACTIONS.VIEW_FEEDBACK, { caseId: caseData.id })
+      return
+    }
+
+    setMessages(prev => [...prev, userMsg])
+    setIsLoading(true)
     try {
       const reply = await callDoubaoAPI([...messages, userMsg], caseData)
       setMessages(prev => [...prev, {
@@ -172,14 +167,13 @@ export default function AgentChatPanel({ caseData }) {
       }])
       logEducationAction(currentUser?.id ?? 'unknown', EDUCATION_ACTIONS.VIEW_FEEDBACK, { caseId: caseData.id })
     } catch {
-      const fallback = getFallbackReply(userMsg.content, caseData)
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'assistant',
-        content: fallback,
+        content: '暂时无法获取进一步回答。可先对照上方的形态评估要点，稍后再追问。',
         timestamp: new Date(),
       }])
-      showToast('AI 服务暂时不可用，切换至预设回复', 'warning')
+      showToast('AI 服务暂时不可用，请稍后重试', 'warning')
     } finally {
       setIsLoading(false)
     }
