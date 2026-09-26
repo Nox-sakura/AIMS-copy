@@ -1,4 +1,3 @@
-import { REFERENCE_VERSION } from '../../constants/gradingReference'
 /**
  * EducationLayout.jsx — 医教智能体模块容器组件
  *
@@ -41,7 +40,7 @@ function EducationHeader() {
             医教智能体
           </h1>
           <p className="text-xs text-gray-500 mt-0.5">
-            形态分级辅助教学平台 · Day 3 卵裂期胚胎
+            LWMA-Net 模型辅助教学平台 · Day 3 卵裂期胚胎
           </p>
         </div>
       </div>
@@ -103,7 +102,6 @@ export default function EducationLayout() {
   const updateLearningRecord = (caseId, userGrade) => {
     const record = {
       submitted: true,
-      referenceVersion: REFERENCE_VERSION,
       userGrade,
       timestamp: new Date().toISOString(),
     }

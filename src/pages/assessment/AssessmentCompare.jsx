@@ -1,4 +1,14 @@
-import { getMorphologyEvidence, evidenceText } from '../../utils/morphologyEvidence'
+/**
+ * AssessmentCompare.jsx — 多胚胎横向对比页
+ *
+ * 功能：
+ *   - 最多同时对比6枚胚胎，通过 AddEmbryoModal 新增
+ *   - 多列并排对比区：图像占位 + 评级 + 各维度概念进度条
+ *   - RadarChart 雷达图：取前5个正向概念维度，多系列（每胚胎一色）
+ *   - 移植优先级排序：可通过 ChevronUp/Down 手动调整顺序 → 确认后 showToast
+ *
+ * 颜色编码：COMPARE_COLORS 数组按顺序分配给各胚胎（蓝/绿/橙/紫/红/青）
+ */
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { X, Plus, ChevronUp, ChevronDown } from 'lucide-react'
@@ -8,7 +18,16 @@ import StatusBadge from '../../components/StatusBadge'
 import PatientInfoBar from '../../components/common/PatientInfoBar'
 import { useAppContext } from '../../context/AppContext'
 import { assessments } from '../../mock/assessments'
+import { concepts } from '../../mock/concepts'
 import { patients } from '../../mock/patients'
+import {
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  Legend, ResponsiveContainer, Tooltip,
+} from 'recharts'
+
+// 雷达图维度：取前5项正向指标
+const RADAR_CONCEPTS = concepts.filter(c => c.direction === 'pos').slice(0, 5)
+
 const COMPARE_COLORS = ['#1A6EBD', '#27AE60', '#E67E22', '#9B59B6', '#E74C3C', '#1ABC9C']
 
 // 添加胚胎 Modal
@@ -88,6 +107,15 @@ export default function AssessmentCompare() {
     setPriority(next)
   }
 
+  // 雷达图数据
+  const radarData = RADAR_CONCEPTS.map(concept => {
+    const row = { subject: concept.name }
+    sortedSelected.forEach(a => {
+      const s = a.conceptScores.find(s => s.id === concept.id)
+      row[a.embryoNo] = s?.score ?? 0
+    })
+    return row
+  })
 
   return (
     <div className="flex flex-col h-full">
@@ -162,7 +190,24 @@ export default function AssessmentCompare() {
                 </div>
                 {/* 概念得分条 */}
                 <div className="space-y-2">
-                  {getMorphologyEvidence(a).map(e => <div key={e.id} className="text-xs border-b border-medical-border pb-2"><p className="text-medical-text">{e.name}</p><p className="text-medical-muted mt-1">{evidenceText(e)} · {e.sourceLabel}</p></div>)}
+                  {a.conceptScores.slice(0, 5).map(s => {
+                    const c = concepts.find(cc => cc.id === s.id)
+                    const isPos = c?.direction !== 'neg'
+                    return (
+                      <div key={s.id}>
+                        <div className="flex justify-between text-[10px] text-medical-muted mb-0.5">
+                          <span className="truncate">{c?.name ?? s.id}</span>
+                          <span className="flex-shrink-0 ml-1">{s.score.toFixed(0)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-1.5">
+                          <div
+                            className={`h-1.5 rounded-full ${isPos ? 'bg-medical-blue' : 'bg-medical-red'}`}
+                            style={{ width: `${Math.min(100, s.score)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
@@ -170,8 +215,27 @@ export default function AssessmentCompare() {
         </div>
 
         {/* ── 雷达图对比 ── */}
-        <InfoCard title="形态维度对比">
-          <div className="h-80 flex flex-col items-center justify-center text-medical-muted text-sm bg-medical-bg rounded-lg"><p>暂无可比较的定量形态数据</p><p className="text-xs mt-2">定性观察请参照上方记录；缺失值不按零绘制雷达图。</p></div>
+        <InfoCard title="概念维度雷达对比（5维度）">
+          <ResponsiveContainer width="100%" height={320}>
+            <RadarChart data={radarData}>
+              <PolarGrid stroke="#DDE3EC" />
+              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: '#7F8C8D' }} />
+              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #DDE3EC' }} />
+              <Legend iconSize={10} wrapperStyle={{ fontSize: 12 }} />
+              {sortedSelected.map((a, idx) => (
+                <Radar
+                  key={a.id}
+                  name={a.embryoNo}
+                  dataKey={a.embryoNo}
+                  stroke={COMPARE_COLORS[idx]}
+                  fill={COMPARE_COLORS[idx]}
+                  fillOpacity={0.12}
+                  strokeWidth={2}
+                />
+              ))}
+            </RadarChart>
+          </ResponsiveContainer>
         </InfoCard>
 
         {/* ── 优先级排序 ── */}

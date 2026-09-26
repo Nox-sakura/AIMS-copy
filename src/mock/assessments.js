@@ -1,22 +1,5 @@
-/**
- * 评估记录 Mock 数据
- *
- * 字段说明：
- *   patientId / patientName  — 关联患者（patients.js）
- *   embryoNo                 — 胚胎编号，格式 E-{周期}-{序号}（如 E-03-A）
- *   cycleNo                  — 所属 IVF 周期编号
- *   status                   — pending 待复核 | reviewing 复核中 | approved 已终审 | rejected 已驳回
- *   grade / gradeLabel       — AI 评级（grade1–grade4）及显示标签
- *   confidence               — AI 置信度（0–1）
- *   imageProcessed           — 图像是否经过预处理修正（医疗合规字段）
- *   aiDecision               — AI 自然语言评估结论
- *   doctorNote               — 医生手动备注
- *   modelUsed                — 使用的评估模型：MCA-Lite | MCA-Standard | MCA-Pro
- *   conceptScores[]          — 各概念维度得分，id 对应 concepts.js
- *                              score: 质量得分 0–100
- *                              percent: XAI贡献百分比，所有概念之和约为100%
- *   versions[]               — 报告修改历史（含版本号、日期、医生、操作说明）
- */
+import { makeMorphologyExample } from './morphologyExamples'
+/** 保留原有界面和兼容接口。 */
 export const assessments = [
   {
     id: 'ASS-2026-0021',
@@ -328,6 +311,19 @@ export const assessments = [
   },
 ]
 
-// 仅为文件名对应的示例记录关联图像，其他记录不得复用。
-const imageExample = assessments.find(a => a.id === 'ASS-2026-0029')
-if (imageExample) imageExample.image = { id: 'demo-baiyanli', source: 'demo', src: '/database/baiyanli_12515_D3_1_8.png', heatmap: { imageId: 'demo-baiyanli', src: '/database/baiyanli_12515_D3_1_8_heatmap.png' } }
+// 独立的界面预设，不从旧贡献值换算；仅绑定内置病例。
+const morphologyExamples = {
+  'ASS-2026-0021': ['均一', '清晰、均匀', '连续、完整', 4],
+  'ASS-2026-0022': ['轻度不均一', '较清晰', '连续、完整', 12],
+  'ASS-2026-0023': ['明显不均一', '颗粒表现较明显', '连续', 26],
+  'ASS-2026-0024': ['均一', '清晰、均匀', '连续、完整', 1],
+  'ASS-2026-0025': ['轻度不均一', '较清晰', '连续、完整', 15],
+  'ASS-2026-0026': ['均一', '清晰、均匀', '连续、完整', 2],
+  'ASS-2026-0027': ['明显不均一', '颗粒表现明显', '边界欠清晰', 62],
+  'ASS-2026-0028': ['轻度不均一', '较清晰', '连续、完整', 18],
+  'ASS-2026-0029': ['轻度不均一', '较清晰', '连续、完整', 14],
+}
+for (const assessment of assessments) {
+  assessment.evidenceSchemaVersion = 1
+  assessment.morphologyEvidence = makeMorphologyExample(morphologyExamples[assessment.id])
+}

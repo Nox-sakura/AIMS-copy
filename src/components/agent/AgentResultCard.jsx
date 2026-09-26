@@ -1,14 +1,4 @@
-import { getMorphologyEvidence, evidenceText } from '../../utils/morphologyEvidence'
-/**
- * AgentResultCard.jsx — AI 助手结构化结果卡片
- *
- * Props:
- *   type       — 'patient_list' | 'report_list' | 'report_summary'
- *   data       — 对应类型的数据
- *   onNavigate — (path: string) => void，跳转回调
- *
- * 保留原有等级配色。
- */
+/** 保留原有界面和兼容接口。 */
 import { useState } from 'react'
 import { Users, FileText, Copy, Check } from 'lucide-react'
 
@@ -107,11 +97,11 @@ export default function AgentResultCard({ type, data, onNavigate }) {
     )
   }
 
-  /* ── 胚胎形态观察对比 ── */
+  /* ── 胚胎概念得分对比 ── */
   if (type === 'embryo_comparison') {
     const { patientName, cycleNo, embryos } = data
     // 取第一条评估的概念列表作为行标题（所有评估概念 ID 相同）
-    const conceptRows = getMorphologyEvidence(embryos[0])
+    const conceptRows = embryos[0]?.conceptScores ?? []
 
     return (
       <div className="bg-white border border-medical-border rounded-xl p-3 text-sm space-y-3">
@@ -119,13 +109,13 @@ export default function AgentResultCard({ type, data, onNavigate }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 font-medium text-medical-text">
             <FileText className="w-4 h-4 text-medical-blue flex-shrink-0" />
-            <span>{patientName} · 第{cycleNo}周期 · {embryos.length} 枚胚胎形态观察对比</span>
+            <span>{patientName} · 第{cycleNo}周期 · {embryos.length} 枚胚胎概念得分对比</span>
           </div>
         </div>
 
         {/* 胚胎列头 */}
         <div className="grid gap-2" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
-          <div className="text-xs text-medical-muted font-medium py-1">观察项</div>
+          <div className="text-xs text-medical-muted font-medium py-1">概念</div>
           {embryos.map(e => {
             const gs = GRADE_STYLES[e.grade] ?? GRADE_STYLES.grade1
             return (
@@ -143,17 +133,30 @@ export default function AgentResultCard({ type, data, onNavigate }) {
           })}
         </div>
 
-        {/* 形态观察行 */}
+        {/* 概念得分行 */}
         <div className="space-y-2 border-t border-medical-border/50 pt-2">
           {conceptRows.map(cs => {
             return (
               <div key={cs.id} className="grid gap-2 items-center" style={{ gridTemplateColumns: `1fr repeat(${embryos.length}, minmax(0,1fr))` }}>
                 {/* 概念名 */}
-                <div className="text-xs text-medical-muted leading-tight">{cs.name}</div>
-                {/* 各胚胎该形态观察 */}
+                <div className="text-xs text-medical-muted leading-tight">{cs.nameCn}</div>
+                {/* 各胚胎该概念得分 */}
                 {embryos.map(e => {
-                  const item = getMorphologyEvidence(e).find(s => s.id === cs.id)
-                  return <div key={e.id} className="text-[10px] text-medical-muted">{evidenceText(item)}<br/>{item.sourceLabel}</div>
+                  const score = e.conceptScores.find(s => s.id === cs.id)?.score ?? 0
+                  const gs = GRADE_STYLES[e.grade] ?? GRADE_STYLES.grade1
+                  return (
+                    <div key={e.id}>
+                      <div className="flex justify-between text-[10px] mb-0.5">
+                        <span className="font-semibold" style={{ color: gs.color }}>{score}</span>
+                      </div>
+                      <div className="h-1.5 bg-medical-bg rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${score}%`, backgroundColor: gs.color }}
+                        />
+                      </div>
+                    </div>
+                  )
                 })}
               </div>
             )
@@ -194,7 +197,9 @@ export default function AgentResultCard({ type, data, onNavigate }) {
   if (type === 'report_summary') {
     const { report, summary } = data
     const gs = GRADE_STYLES[report.grade] ?? GRADE_STYLES.grade1
-    const top5 = getMorphologyEvidence(report)
+    const top5 = [...report.conceptScores]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
 
     const handleCopy = () => {
       navigator.clipboard.writeText(summary).then(() => {
@@ -217,9 +222,22 @@ export default function AgentResultCard({ type, data, onNavigate }) {
           <span className="text-medical-muted text-xs">{report.assessmentDate}</span>
         </div>
 
-        {/* 形态观察（前 5 项） */}
+        {/* 概念得分（前 5 项） */}
         <div className="space-y-2">
-          {top5.map(e => <div key={e.id} className="flex justify-between gap-2 text-xs text-medical-muted"><span>{e.name}</span><span>{evidenceText(e)} · {e.sourceLabel}</span></div>)}
+          {top5.map(cs => (
+            <div key={cs.id}>
+              <div className="flex justify-between text-xs mb-0.5">
+                <span className="text-medical-muted">{cs.nameCn}</span>
+                <span className="font-medium text-medical-text">{cs.score}</span>
+              </div>
+              <div className="h-1.5 bg-medical-bg rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full"
+                  style={{ width: `${cs.score}%`, backgroundColor: gs.color }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* AI 总结草稿 */}

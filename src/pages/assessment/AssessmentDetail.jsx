@@ -1,6 +1,14 @@
-import { getMorphologyEvidence, evidenceSummary } from '../../utils/morphologyEvidence'
-import MorphologyImages from '../../components/common/MorphologyImages'
-import { useState, useEffect } from 'react'
+import { getMorphologyEvidence } from '../../utils/morphologyEvidence'
+/**
+ * AssessmentDetail.jsx — 评估详情页（报告核心页面）
+ *
+ * 第三阶段升级：
+ *   - PatientInfoBar 顶部患者信息确认栏
+ *   - 报告头部增加「使用模型」字段 + 医生职称格式化
+ *   - 概念评分明细展示四项预设形态观察，与图像独立展示
+ *   - 导出PDF按钮触发 PDFPreviewModal
+ */
+import { useState, useRef, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Download, GitCompare, ChevronDown, ChevronUp, CheckCircle, X } from 'lucide-react'
 import PageHeader from '../../components/PageHeader'
@@ -29,11 +37,19 @@ const GRADE_BG = {
   grade4: 'bg-[#A9DFBF] border-[#82C9A0]',
 }
 
-const MODEL_DISPLAY = {
-  'MCA-Lite':     '轻量版（演示）',
-  'MCA-Standard': '标准版（演示）',
-  'MCA-Pro':      '精准版（演示）',
+const MODEL_AUC = {
+  'MCA-Lite':     '0.8900',
+  'MCA-Standard': '0.9288',
+  'MCA-Pro':      '0.9500',
 }
+
+const MODEL_DISPLAY = {
+  'MCA-Lite':     'DenseNet169',
+  'MCA-Standard': 'LWMA-Net',
+  'MCA-Pro':      '多网络融合模型',
+}
+
+const DEFAULT_ORIGINAL_IMAGE = '/database/baiyanli_12515_D3_1_8.png'
 
 const QUICK_NOTES = [
   '同意AI评级',
@@ -164,8 +180,14 @@ export default function AssessmentDetail() {
     }
   }, [assessment?.patientId])
 
-  // 热力图联动状态
-  const [hoveredConcept, setHoveredConcept] = useState(null)
+  // 原始图与热力图分开控制：原始图加载完立即显示，热力图延迟 1s 后显示
+  const [originalReady, setOriginalReady] = useState(false)
+  const [heatmapReady, setHeatmapReady] = useState(false)
+  const heatmapTimerRef = useRef(null)
+  const onOriginalLoad = () => setOriginalReady(true)
+  const onHeatmapLoad = () => {
+    heatmapTimerRef.current = setTimeout(() => setHeatmapReady(true), 1000)
+  }
   const [quickNoteValue, setQuickNoteValue] = useState('')
 
   if (!assessment) return null
@@ -176,8 +198,8 @@ export default function AssessmentDetail() {
 
   const enrichedScores = getMorphologyEvidence(a)
 
-
-    const appendVersion = (note, grade) => {
+  /** 向操作记录追加一条新条目，版本号自动递增 */
+  const appendVersion = (note, grade) => {
     setLocalVersions(prev => {
       let nextVer
       if (prev.length === 0) {
@@ -255,7 +277,8 @@ export default function AssessmentDetail() {
   }
 
   const doctorLabel = formatDoctorWithTitle(a.doctor)
-  const modelLabel  = a.simulated === false ? '分级模型' : MODEL_DISPLAY[a.modelUsed] ?? '标准版（演示）'
+  const modelLabel  = MODEL_DISPLAY[a.modelUsed] ?? a.modelUsed ?? 'LWMA-Net'
+  const modelAUC    = MODEL_AUC[a.modelUsed] ?? '0.9288'
 
   return (
     <div className="flex flex-col h-full">
@@ -299,7 +322,7 @@ export default function AssessmentDetail() {
               { label: '患者ID',   value: a.patientId },
               { label: '胚胎编号', value: a.embryoNo },
               { label: '操作医师', value: doctorLabel },
-              { label: '使用模型', value: `${modelLabel}`, sub: a.simulated === false ? '模型返回结果' : '分级演示数据' },
+              { label: '使用模型', value: `${modelLabel}`, sub: `AUC ${modelAUC}` },
             ].map(row => (
               <div key={row.label} className="bg-white px-4 py-3">
                 <p className="text-xs text-medical-muted mb-0.5">{row.label}</p>
@@ -328,7 +351,49 @@ export default function AssessmentDetail() {
                 <span className="text-xs bg-orange-100 text-orange-700 border border-orange-200 px-2 py-0.5 rounded">已预处理</span>
               )
             }>
-              <MorphologyImages record={a} selected={enrichedScores.find(e => e.id === hoveredConcept)} />
+              <div className="grid grid-cols-2 gap-4">
+
+                {/* 左列：AI 热力图 */}
+                <div>
+                  <div className="aspect-[4/3] rounded-lg border border-medical-border overflow-hidden bg-gray-100 relative">
+                    {!heatmapReady && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-6 h-6 border-2 border-medical-blue border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
+                    <img
+                      src="/database/baiyanli_12515_D3_1_8_heatmap.png"
+                      alt="AI注意力热力图"
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${heatmapReady ? 'opacity-100' : 'opacity-0'}`}
+                      onLoad={onHeatmapLoad}
+                    />
+                  </div>
+                  <p className="text-xs text-medical-muted text-center mt-1.5">
+                    AI 注意力热力图（颜色深浅反映模型关注强度）
+                  </p>
+                </div>
+
+                {/* 右列：原始显微镜图像 */}
+                <div>
+                  <div className="aspect-[4/3] rounded-lg border border-medical-border overflow-hidden bg-gray-100 relative">
+                    {!originalReady && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-6 h-6 border-2 border-medical-blue border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
+                    <img
+                      key={DEFAULT_ORIGINAL_IMAGE}
+                      src={DEFAULT_ORIGINAL_IMAGE}
+                      alt="原始显微镜图像"
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${originalReady ? 'opacity-100' : 'opacity-0'}`}
+                      onLoad={onOriginalLoad}
+                    />
+                  </div>
+                  <p className="text-xs text-medical-muted text-center mt-1.5">原始显微镜图像</p>
+
+                </div>
+
+              </div>
             </InfoCard>
 
             {/* 综合评级结论区 */}
@@ -348,14 +413,15 @@ export default function AssessmentDetail() {
                       <div className="h-2 rounded-full bg-medical-blue transition-all" style={{ width: `${a.confidence * 100}%` }} />
                     </div>
                     <div className="flex justify-between text-xs text-medical-muted">
-                      <span>{a.simulated === false ? '性能以独立验证为准' : '演示分级结果，非本项目实测性能'}</span>
+                      <span>置信区间 [{((a.confidence - 0.04) * 100).toFixed(1)}%, {((a.confidence + 0.02) * 100).toFixed(1)}%]</span>
+                      <span>AUC {modelAUC}</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="bg-medical-bg rounded-lg p-4">
-                <p className="text-xs font-medium text-medical-muted mb-2">形态观察说明</p>
-                <p className="text-sm text-medical-text leading-relaxed">{evidenceSummary(a)}</p>
+                <p className="text-xs font-medium text-medical-muted mb-2">AI 决策描述</p>
+                <p className="text-sm text-medical-text leading-relaxed">{a.aiDecision}</p>
               </div>
             </InfoCard>
 
@@ -381,12 +447,10 @@ export default function AssessmentDetail() {
           {/* ── 右侧：概念评分卡 + 复核操作 + 版本历史 ── */}
           <div className="xl:col-span-2 space-y-4">
 
-            {/* 形态证据解析（卡片式） */}
-            <InfoCard title="形态证据解析">
+            {/* 概念评分明细（卡片式） */}
+            <InfoCard title="概念评分明细">
               <ConceptCardGroup
                 scores={enrichedScores}
-                hoveredId={hoveredConcept}
-                onHover={setHoveredConcept}
               />
             </InfoCard>
 

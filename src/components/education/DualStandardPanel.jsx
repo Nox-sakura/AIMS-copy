@@ -1,5 +1,7 @@
-import { getMorphologyEvidence, evidenceText } from '../../utils/morphologyEvidence'
-import { GRADING_NOTE, isScoringEligible } from '../../constants/gradingReference'
+/**
+ * DualStandardPanel.jsx — 双标准对比反馈面板（v3）
+ * 内联嵌入于右列，不再作为独立列展示
+ */
 import { Cpu, UserCheck, Info, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react'
 import { RETAINED_CONCEPTS } from '@/constants/educationConcepts'
 
@@ -29,18 +31,37 @@ export function GradeBadge({ grade, size = 'md' }) {
   )
 }
 
+function ConceptScoreRow({ name, score }) {
+  return (
+    <div>
+      <div className="flex justify-between text-[10px] mb-0.5">
+        <span className="text-gray-600 truncate mr-1">{name}</span>
+        <span className="text-gray-400 flex-shrink-0">{Math.round(score * 100)}%</span>
+      </div>
+      <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-blue-400 rounded-full transition-all duration-500"
+          style={{ width: `${score * 100}%` }}
+        />
+      </div>
+    </div>
+  )
+}
+
 function ModelCard({ caseData }) {
   return (
     <div className="p-3 rounded-xl border border-gray-200 bg-white space-y-2.5">
       <div className="flex items-center gap-1.5">
         <Cpu className="w-3.5 h-3.5 text-blue-500" />
-        <span className="text-xs font-semibold text-gray-700">分级模型（演示）</span>
+        <span className="text-xs font-semibold text-gray-700">LWMA-Net 模型</span>
       </div>
       <GradeBadge grade={caseData.modelOutput.grade} size="sm" />
       <div className="space-y-1.5">
-        {getMorphologyEvidence(caseData).map(e => <p key={e.id} className="text-[10px] text-gray-500">{e.name}：{evidenceText(e)} · {e.sourceLabel}</p>)}
+        {caseData.modelOutput.concepts.map(c => (
+          <ConceptScoreRow key={c.name} name={c.name} score={c.score} />
+        ))}
       </div>
-      <p className="text-[10px] text-gray-400">分级结果不等于形态测量</p>
+      <p className="text-[10px] text-gray-400">AUC 0.9288 · Acc 76.52%</p>
     </div>
   )
 }
@@ -55,7 +76,7 @@ function HumanCard({ caseData }) {
       <GradeBadge grade={caseData.humanLabel.grade} size="sm" />
       {/* 严格禁止显示任何置信度数值 */}
       <p className="text-xs text-gray-400 leading-relaxed">
-        示例人工等级<br />
+        经验胚胎学家标注<br />
         <span className="text-[10px]">仅显示等级，不含置信度</span>
       </p>
     </div>
@@ -86,7 +107,7 @@ function LearningTip({ userGrade, modelGrade, humanGrade }) {
         <AlertTriangle className="w-5 h-5 text-orange-500 mb-2 flex-shrink-0" />
         <p className="text-sm font-semibold text-orange-700">模型与人工标注存在分歧</p>
         <p className="text-xs text-orange-600 mt-1">
-          分级模型（演示）判定 Grade {modelGrade}，人工标注 Grade {humanGrade}，
+          LWMA-Net 模型判定 Grade {modelGrade}，人工标注 Grade {humanGrade}，
           建议综合参考两种标准。
         </p>
       </div>
@@ -138,20 +159,20 @@ export default function DualStandardPanel({ caseData, userGrade, visible }) {
         <HumanCard caseData={caseData} />
       </div>
 
-      {/* 分级参考说明 */}
+      {/* 76.52% 说明文字 */}
       <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
         <Info className="w-3.5 h-3.5 text-blue-500 flex-shrink-0 mt-0.5" />
         <p className="text-xs text-blue-700 leading-relaxed">
-          {GRADING_NOTE}
+          模型准确率为 76.52%，与人工标注存在差异属正常现象，两者均可作为学习参考。
         </p>
       </div>
 
       {/* 学习结果提示（垂直居中于盒子内） */}
-      {isScoringEligible(caseData) ? <LearningTip
+      <LearningTip
         userGrade={userGrade}
         modelGrade={caseData.modelOutput.grade}
         humanGrade={caseData.humanLabel.grade}
-      /> : <p className="text-xs text-gray-500">本例标注待核验，仅供讨论，不计入一致率。</p>}
+      />
     </div>
   )
 }

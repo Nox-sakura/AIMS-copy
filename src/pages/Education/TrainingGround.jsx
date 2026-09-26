@@ -1,4 +1,3 @@
-import { GRADE_REFERENCE, GRADING_NOTE } from '../../constants/gradingReference'
 /**
  * TrainingGround.jsx — 胚胎评估训练场（v3）
  * 两列布局：左列（图像 + 案例列表） / 右列（评估 + 反馈合并）+ 底部进度条
@@ -62,7 +61,12 @@ function EmptyAssessmentState() {
 
 /* ── 等级选择区 ── */
 function GradeSelector({ userGrade, onChange, disabled }) {
-  const options = GRADE_REFERENCE
+  const options = [
+    { g: 1, desc: '细胞均一，碎片 < 10%' },
+    { g: 2, desc: '轻度不均一，碎片 10–25%' },
+    { g: 3, desc: '明显不均一，碎片 25–50%' },
+    { g: 4, desc: '严重碎片化，碎片 > 50%' },
+  ]
 
   return (
     <section>
@@ -95,7 +99,6 @@ function GradeSelector({ userGrade, onChange, disabled }) {
           )
         })}
       </div>
-      <p className="text-xs text-gray-400 leading-relaxed mt-2">{GRADING_NOTE}</p>
     </section>
   )
 }
@@ -109,9 +112,9 @@ function ConceptAssessment({ grade, selected, onToggle, disabled }) {
                            hover:text-gray-700">
         <span className="flex items-center gap-1.5 font-medium">
           <ChevronRight className="w-3.5 h-3.5 transition-transform group-open:rotate-90" />
-          形态观察项目（可选）
+          概念评估（可选）
         </span>
-        <span className="text-gray-400">勾选仅作学习标记，不代表观察结论</span>
+        <span className="text-gray-400">帮助你深化理解</span>
       </summary>
       <div className="mt-2.5 flex flex-wrap gap-1.5">
         {(RETAINED_CONCEPTS[grade] ?? []).map(concept => (

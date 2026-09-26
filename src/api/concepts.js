@@ -1,9 +1,4 @@
-/**
- * concepts.js — 概念评分 API 接口层
- *
- * 真实环境：对接 Python 后端 /api/concepts 接口（旧版兼容输出）
- * 演示环境：BASE_URL 为空时返回 mock 概念数据
- */
+/** 保留原有界面和兼容接口。 */
 import { concepts as mockData } from '../mock/concepts'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
@@ -25,7 +20,7 @@ export async function getConcepts() {
   return Promise.resolve([...mockData])
 }
 
-/** 根据评估 ID 获取该评估的概念得分详情（旧版兼容字段） */
+/** 保留原有界面和兼容接口。 */
 export async function getConceptScores(assessmentId) {
   if (BASE_URL) {
     const res = await fetch(`${BASE_URL}/api/assessments/${assessmentId}/concepts`, {
