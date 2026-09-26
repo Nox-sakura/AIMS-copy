@@ -14,48 +14,51 @@ import { predictEmbryo } from '../../api/mcaApi'
 
 const STEPS = ['选择患者', '上传图像', '预处理确认', '提交评估']
 
-/* ── 三个模型定义 ── */
+/* ── 论文方法展示选项（保留内部 key，兼容已有报告） ── */
 const MODELS = [
   {
     key:    'MCA-Lite',
-    label:  'DenseNet169',
-    sub:    '轻量级模型',
+    label:  'LWMA-Net',
+    sub:    '2022 · 轻量形态注意力网络',
     Icon:   Zap,
     color:  '#E67E22',
     bg:     '#FEF3E2',
-    time:   '＜1秒（约0.8秒）',
-    auc:    '0.89',
-    concepts: 5,
-    scene:  '快速初筛、批量样本处理',
-    tags:   ['极速', '轻量'],
+    time:   '论文未报告可比推理耗时',
+    metricLabel: '四分类 AUC（验证 / 独立测试）',
+    metric: '0.9688 / 0.9430',
+    concepts: '未报告',
+    scene:  'Day 3 静态形态分级研究',
+    tags:   ['形态注意力', '多尺度融合'],
     recommended: false,
   },
   {
     key:    'MCA-Standard',
-    label:  'LWMA-Net',
-    sub:    '标准版',
+    label:  'EL 多网络融合模型',
+    sub:    '2021 · 特征筛选与逻辑回归融合',
     Icon:   BarChart2,
     color:  '#1A6EBD',
     bg:     '#EBF4FF',
-    time:   '约2秒',
-    auc:    '0.9288',
-    concepts: 10,
-    scene:  '日常临床评估',
-    tags:   ['均衡', '日常首选'],
-    recommended: true,
+    time:   '论文未报告可比推理耗时',
+    metricLabel: '四分类 ACC（验证 / 独立测试）',
+    metric: '74.14% / 74.93%',
+    concepts: '未报告',
+    scene:  '融合四种 CNN 骨干网络的形态特征',
+    tags:   ['特征筛选', '逻辑回归融合'],
+    recommended: false,
   },
   {
     key:    'MCA-Pro',
-    label:  '多网络融合模型',
-    sub:    '精准版',
+    label:  'CNN 特征提取骨干',
+    sub:    'DenseNet169 · InceptionV3 · ResNet50 · VGG19',
     Icon:   Crosshair,
     color:  '#27AE60',
     bg:     '#E8F8EF',
-    time:   '约5秒',
-    auc:    '0.95',
-    concepts: 28,
-    scene:  '疑难病例、终审前精准复核',
-    tags:   ['高精度', '全概念集'],
+    time:   '论文未报告可比推理耗时',
+    metricLabel: '论文指标',
+    metric: '未在此处单列',
+    concepts: '未报告',
+    scene:  '2021 年研究用于特征提取的四种网络架构',
+    tags:   ['四种网络架构', '特征提取'],
     recommended: false,
   },
 ]
@@ -111,11 +114,11 @@ function ModelCompareModal({ onClose }) {
             </thead>
             <tbody>
               {[
-                ['AUC', m => m.auc],
-                ['处理速度', m => m.time],
-                ['概念数量', m => `${m.concepts}个`],
-                ['热力图精度', m => m.key === 'MCA-Lite' ? '基础' : m.key === 'MCA-Standard' ? '标准' : '精细'],
-                ['适用场景', m => m.scene],
+                ['论文报告的指标', m => m.metric],
+                ['指标口径', m => m.metricLabel],
+                ['推理耗时', m => m.time],
+                ['概念数量', m => m.concepts],
+                ['研究内容', m => m.scene],
               ].map(([label, getter]) => (
                 <tr key={label} className="hover:bg-medical-bg/50">
                   <td className="px-4 py-2.5 text-medical-muted border border-medical-border">{label}</td>
@@ -130,8 +133,8 @@ function ModelCompareModal({ onClose }) {
           </table>
         </div>
         <p className="text-xs text-medical-muted text-center mb-3">
-          处理速度基于服务器端 ResNet-50 推理，实际耗时受图像预处理
-          及网络传输影响。
+          三项按两篇参考研究中的方法整理；论文未提供的模型耗时与概念数量不作推定。
+          此处为方法展示选项，不代表系统已分别接入三套模型。
         </p>
         <button onClick={onClose} className="btn-secondary w-full mt-4">关闭</button>
       </div>
@@ -146,7 +149,7 @@ function ModelSelector({ selected, onSelect, lastUsed }) {
     <div className="mt-6 space-y-3">
       <div>
         <h4 className="text-sm font-semibold text-medical-text">选择评估模型</h4>
-        <p className="text-xs text-medical-muted mt-0.5">请根据临床需求选择合适的模型档位</p>
+        <p className="text-xs text-medical-muted mt-0.5">参考研究方法展示，不代表三种临床模型档位</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -195,13 +198,13 @@ function ModelSelector({ selected, onSelect, lastUsed }) {
                 </div>
 
                 <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-medical-muted">AUC 参考</span>
-                    <span className="font-semibold" style={{ color: m.color }}>{m.auc}</span>
+                  <div className="text-xs">
+                    <div className="text-medical-muted">{m.metricLabel}</div>
+                    <div className="font-semibold mt-0.5" style={{ color: m.color }}>{m.metric}</div>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-medical-muted">概念数量</span>
-                    <span className="font-semibold" style={{ color: m.color }}>{m.concepts}个</span>
+                    <span className="font-semibold" style={{ color: m.color }}>{m.concepts}</span>
                   </div>
                 </div>
 
